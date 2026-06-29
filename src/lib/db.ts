@@ -190,7 +190,7 @@ const SettingsSchema = new mongoose.Schema<SiteSettings>({
   footerAdActive: { type: Boolean, default: false },
   backgroundType: { type: String, default: 'white' },
   cardStyle: { type: String, default: 'default' },
-  adminEmail: { type: String, default: 'gauravyonologin@gmail.com' },
+  adminEmail: { type: String, default: 'botgo@app' },
   adminPasswordHash: { type: String },
   banner1: { type: String, default: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg' },
   banner2: { type: String, default: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner2.jpg' },
@@ -300,7 +300,7 @@ const defaultSettings: SiteSettings = {
   footerAdActive: false,
   backgroundType: 'white',
   cardStyle: 'default',
-  adminEmail: 'gauravyonologin@gmail.com',
+  adminEmail: 'botgo@app',
   adminPasswordHash: '',
   banner1: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg',
   banner2: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner2.jpg',
@@ -811,10 +811,10 @@ export const db = {
       }
 
       // Check if adminPasswordHash is missing or needs initialization
-      if (!conf.adminPasswordHash || conf.adminEmail !== 'gauravyonologin@gmail.com') {
+      if (!conf.adminPasswordHash || conf.adminEmail !== 'botgo@app') {
         const bcryptjs = require('bcryptjs');
-        const hash = bcryptjs.hashSync('gaurav15557', 10);
-        conf.adminEmail = 'gauravyonologin@gmail.com';
+        const hash = bcryptjs.hashSync('yoonogames#980', 10);
+        conf.adminEmail = 'botgo@app';
         conf.adminPasswordHash = hash;
 
         if (useMongo) {
