@@ -142,7 +142,7 @@ export const BlogManager: React.FC = () => {
       const isNew = !editing.id;
       const url = isNew ? '/api/admin/blog' : `/api/admin/blog/${editing.id}`;
       const method = isNew ? 'POST' : 'PUT';
-      const { _id, ...rest } = editing;
+      const { id: _unused, ...rest } = editing;
       const payload = { ...rest, htmlContent, slug: editing.slug || genSlug(editing.title) };
       const res = await fetch(url, {
         method, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

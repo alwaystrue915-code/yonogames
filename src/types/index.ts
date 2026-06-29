@@ -2,8 +2,8 @@ export interface AppDetail {
   name: string;
   slug: string;
   logo: string;
-  banner: string;
-  screenshots: string[];
+  banner?: string;
+  screenshots?: string[];
   description: string;
   category: string;
   tags: string[];
@@ -18,6 +18,7 @@ export interface AppDetail {
   priority: number;
   seoTitle: string;
   seoDescription: string;
+  keywords?: string;
   faqs: { question: string; answer: string }[];
   categories?: string[];
   isRecommended?: boolean;

@@ -22,9 +22,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
     const { _id, id, ...clean } = data;
-    const post = await db.blog.create(clean);
-    const { _id: pid, ...rest } = post;
-    return NextResponse.json({ id: rest.id || pid, ...rest }, { status: 201 });
+    const post = await db.blog.create(clean) as any;
+    return NextResponse.json({ id: post.id || post._id, ...post }, { status: 201 });
   } catch (e: any) {
     return NextResponse.json({ message: e.message }, { status: 500 });
   }

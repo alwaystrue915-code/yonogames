@@ -11,8 +11,8 @@ export interface AppDetail {
   name: string;
   slug: string;
   logo: string;
-  banner: string;
-  screenshots: string[];
+  banner?: string;
+  screenshots?: string[];
   description: string;
   category: string;
   tags: string[];
@@ -27,6 +27,7 @@ export interface AppDetail {
   priority: number;
   seoTitle: string;
   seoDescription: string;
+  keywords?: string;
   faqs: { question: string; answer: string }[];
   categories?: string[];
   isRecommended?: boolean;
@@ -59,6 +60,7 @@ export interface BlogPost {
   views: number;
   likes: number;
   faqs?: { question: string; answer: string }[];
+  guide?: string;
 }
 
 export interface Category {
@@ -144,6 +146,7 @@ const AppSchema = new mongoose.Schema<AppDetail>({
   priority: { type: Number, default: 0 },
   seoTitle: String,
   seoDescription: String,
+  keywords: String,
   faqs: [{ question: String, answer: String }],
   categories: { type: [String], default: [] },
   isRecommended: { type: Boolean, default: false },

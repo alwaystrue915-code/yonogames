@@ -13,8 +13,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     if (!post) {
       return NextResponse.json({ message: 'Not found' }, { status: 404 });
     }
-    const { _id: pid, ...rest } = post;
-    return NextResponse.json({ id: rest.id || pid, ...rest });
+    const p = post as any;
+    return NextResponse.json({ id: p.id || p._id, ...p });
   } catch (e: any) {
     return NextResponse.json({ message: e.message }, { status: 500 });
   }
