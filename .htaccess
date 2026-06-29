@@ -1,0 +1,25 @@
+# CORS
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "POST, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type"
+
+# Handle OPTIONS preflight
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# PHP limits
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 60
+php_value max_input_time 60
+
+# Deny access to htaccess / htpasswd
+<FilesMatch "^\.ht">
+    Require all denied
+</FilesMatch>
+
+# Block PHP execution inside uploads folder
+<IfModule mod_rewrite.c>
+    RewriteRule ^uploads/.*\.php$ - [F,L]
+</IfModule>
