@@ -16,10 +16,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yononewgamess.com';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Yono Games - Yono Games, Rummy Apps and APK Guides',
+    default: 'Yono Games - Yono Game APK Directory and App Guides',
     template: '%s | Yono Games',
   },
-  description: 'Discover, compare and research Yono games, rummy apps, signup bonuses, withdrawal details and Android APK installation guides.',
+  description: 'Discover, compare and research Yono game and Yono Games APK listings, rummy apps, signup bonuses, withdrawal details and Android installation guides.',
   applicationName: 'Yono Games',
   category: 'Games',
   referrer: 'origin-when-cross-origin',
@@ -69,8 +69,9 @@ const siteGraphJsonLd = {
       '@type': 'WebSite',
       '@id': `${siteUrl}/#website`,
       name: 'Yono Games',
+      alternateName: ['Yono Game', 'Yono Games APK', 'Yono Game APK Directory'],
       url: siteUrl,
-      description: 'Yono Games helps users discover, compare, and research Yono games, rummy APK listings, bonuses, withdrawal details, and official app links.',
+      description: 'Yono Games helps users discover, compare, and research Yono game APK listings, Yono Games apps, rummy APK listings, bonuses, withdrawal details, and official app links.',
       inLanguage: 'en-IN',
       potentialAction: {
         '@type': 'SearchAction',
@@ -85,6 +86,7 @@ const siteGraphJsonLd = {
       '@type': 'Organization',
       '@id': `${siteUrl}/#organization`,
       name: 'Yono Games',
+      alternateName: ['Yono Game', 'Yono Games APK'],
       url: siteUrl,
       sameAs: ['https://telegram.me/aaron7512']
     },

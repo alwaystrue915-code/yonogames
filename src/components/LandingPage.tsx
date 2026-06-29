@@ -25,12 +25,16 @@ interface LandingPageProps {
 
 const homeFaqs = [
   {
-    question: 'What are Yono Games?',
-    answer: 'Yono Games is a commonly used search term for Android skill-game and rummy applications that offer card games, tournaments, signup rewards and withdrawal features. Yono Games independently organizes information about these apps so visitors can compare listings before downloading.',
+    question: 'What is Yono Game?',
+    answer: 'Yono Game is a search phrase people use for Android card, rummy and skill-game apps that may include signup rewards, tournaments, wallet features and withdrawal options. This homepage helps visitors compare Yono game APK listings before they open a download link.',
   },
   {
-    question: 'How can I download a Yono Games APK?',
-    answer: 'Choose an app listing, review its bonus, rating and withdrawal information, then use the red download button on its detail page. Android may ask you to allow installation from your browser. Always review permissions and the publisher information before installing an APK.',
+    question: 'What are Yono Games?',
+    answer: 'Yono Games is a commonly used search term for multiple Android skill-game and rummy applications. Yono Games independently organizes app names, bonuses, ratings, minimum withdrawals, features and installation guidance so visitors can compare listings before downloading.',
+  },
+  {
+    question: 'How can I download a Yono Game APK?',
+    answer: 'Choose a Yono game listing, review its bonus, rating and withdrawal information, then use the download button on its detail page. Android may ask you to allow installation from your browser. Always review permissions, publisher details and local eligibility before installing an APK.',
   },
   {
     question: 'Which Yono game is best for new users?',
@@ -123,8 +127,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="space-y-3" aria-labelledby="home-search-title">
         <div className="space-y-3">
           <div>
-            <h1 id="home-search-title" className="text-2xl font-extrabold text-slate-900 sm:text-3xl">Yono Games</h1>
-            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Search and compare Yono game APK listings, bonuses, ratings and withdrawal details.</p>
+            <h1 id="home-search-title" className="text-2xl font-extrabold text-slate-900 sm:text-3xl">Yono Games - Yono Game APK Directory</h1>
+            <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Search and compare Yono game and Yono Games APK listings, bonuses, ratings, minimum withdrawals and safe download details.</p>
           </div>
           <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_330px] lg:items-stretch">
             <div className="min-w-0">
@@ -150,8 +154,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="mb-4 flex items-end justify-between gap-3">
           <div>
             <span className="text-[10px] font-black uppercase text-[#2C3EFE]">Editor shortlist</span>
-            <h2 id="top-yono-games" className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">Top Yono Games</h2>
-            <p className="mt-1 text-xs font-semibold text-slate-500">Popular listings ranked by current priority and app information.</p>
+            <h2 id="top-yono-games" className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">Top Yono Game Picks</h2>
+            <p className="mt-1 text-xs font-semibold text-slate-500">Popular Yono Games listings ranked by current priority, app information and comparison value.</p>
           </div>
           <Link href="/all-yonoapps" className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[#2C3EFE] no-underline">View all <ChevronRight size={15} /></Link>
         </div>
@@ -166,8 +170,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <span className="text-[10px] font-black uppercase text-[#2C3EFE]">Browse and compare</span>
-            <h2 id="all-yono-games" className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">Yono Games APK Directory</h2>
-            <p className="mt-1 max-w-2xl text-xs font-semibold leading-5 text-slate-500">Filter current Yono apps by category, then open any listing for bonus terms, minimum withdrawal, features, FAQs and installation steps.</p>
+            <h2 id="all-yono-games" className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">Yono Game and Yono Games APK Directory</h2>
+            <p className="mt-1 max-w-2xl text-xs font-semibold leading-5 text-slate-500">Filter current Yono apps by category, then open any listing for bonus terms, minimum withdrawal, features, FAQs, safety notes and installation steps.</p>
           </div>
           <div className="inline-flex w-full rounded-lg bg-slate-100 p-1 sm:w-auto" aria-label="App listing view">
             {[
@@ -211,10 +215,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <span className="text-[10px] font-black uppercase text-[#2C3EFE]">Practical comparison guide</span>
           <h2 id="choose-yono-app" className="mt-1 text-xl font-extrabold text-slate-900 sm:text-2xl">How to Compare Yono Game Apps</h2>
           <p className="mt-3 text-sm font-medium leading-7 text-slate-600">
-            A large welcome offer does not automatically make a Yono game suitable for you. Start by checking the available game modes, minimum withdrawal, payment methods, customer support and bonus conditions. Read the individual app page before downloading and confirm that the operator supports your location.
+            A large welcome offer does not automatically make a Yono game suitable for you. Start by checking the available game modes, minimum withdrawal, payment methods, customer support, bonus conditions and update status. Read the individual app page before downloading and confirm that the operator supports your location.
           </p>
           <p className="mt-3 text-sm font-medium leading-7 text-slate-600">
             APK files are installed outside the Google Play flow, so Android may request permission to install from your browser. Verify the app name and icon, review requested permissions and keep your phone security features enabled. Yono Games provides research and outgoing links but does not operate user accounts, process deposits or approve withdrawals.
+          </p>
+          <p className="mt-3 text-sm font-medium leading-7 text-slate-600">
+            For answer engines and search visitors, the short answer is simple: Yono Games is a comparison directory, while each Yono game listing belongs to a third-party app operator. Use this page to compare app details, then verify final terms inside the official destination before registering or playing.
           </p>
         </article>
 

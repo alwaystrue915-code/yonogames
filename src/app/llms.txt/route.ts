@@ -4,7 +4,7 @@ export async function GET() {
   const settings = await db.settings.get();
   const domain = settings?.siteDomain || 'https://yononewgamess.com';
   const siteName = settings?.siteName || 'Yono Games';
-  const siteDesc = settings?.siteDescription || 'Premium App Discovery & Play Platform';
+  const siteDesc = settings?.siteDescription || 'Yono Game and Yono Games APK discovery, comparison and download guide directory for India-focused Android app research.';
 
   const apps = await db.apps.find({ status: 'active' });
   const posts = await db.blog.find({ status: 'published' });
@@ -15,6 +15,10 @@ export async function GET() {
   const llms = `# ${siteName}
 
 > ${siteDesc}
+
+Yono Games is an independent comparison directory for people researching Yono game and Yono Games APK listings. The site organizes third-party app names, bonuses, ratings, minimum withdrawal details, features, safety notes, FAQs and outgoing download links. Yono Games does not own listed apps, process deposits, approve withdrawals or operate gaming accounts.
+
+Primary topics: Yono Game, Yono Games, Yono Games APK, Yono Game APK download, rummy APK listings, Android skill-game apps, app bonus comparison, minimum withdrawal information, India eligibility notes.
 
 ## Useful Links
 

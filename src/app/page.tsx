@@ -7,8 +7,8 @@ import { Metadata } from 'next';
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await db.settings.get();
   const domain = settings?.siteDomain || 'https://yononewgamess.com';
-  const title = settings?.siteTitle || 'Yono Games - Download Yono Game APKs & Compare Apps';
-  const description = settings?.siteDescription || 'Explore Yono Games and compare Android APK listings, signup bonuses, ratings, minimum withdrawals, app features and installation guides.';
+  const title = settings?.siteTitle || 'Yono Games - Yono Game APK Download, Bonus & App Comparison';
+  const description = settings?.siteDescription || 'Find Yono game and Yono Games APK listings in one India-focused directory. Compare bonuses, ratings, minimum withdrawals, app features, safety notes and download guides.';
   const image = settings?.banner1
     ? (settings.banner1.startsWith('http') ? settings.banner1 : `${domain}${settings.banner1}`)
     : `${domain}/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg`;
@@ -20,12 +20,19 @@ export async function generateMetadata(): Promise<Metadata> {
       'Yono Games',
       'Yono Game',
       'Yono Games APK',
+      'Yono Game APK',
+      'Yono game download',
       'Yono Games download',
+      'Yono games download',
+      'Yono game app',
+      'Yono games app',
+      'best Yono game',
+      'best Yono games',
       'Yono rummy apps',
       'Yono app bonus',
       'Android rummy APK',
       'Yono game withdrawal',
-      'Yono Games',
+      'Yono Games India',
     ],
     alternates: {
       canonical: domain,
@@ -74,11 +81,15 @@ export default async function HomeRoute() {
   const cleanCollections = JSON.parse(JSON.stringify(collections));
   const cleanSettings = JSON.parse(JSON.stringify(settings));
   const domain = cleanSettings?.siteDomain || 'https://yononewgamess.com';
+  const image = cleanSettings?.banner1
+    ? (cleanSettings.banner1.startsWith('http') ? cleanSettings.banner1 : `${domain}${cleanSettings.banner1}`)
+    : `${domain}/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg`;
   const activeApps = cleanApps.filter((app: any) => app.status === 'active');
   const homeFaqs = [
-    ['What are Yono Games?', 'Yono Games is a common search term for Android skill-game and rummy applications offering card games, tournaments, signup rewards and withdrawal features. Yono Games independently organizes these app listings for comparison.'],
-    ['How can I download a Yono Games APK?', 'Choose an app, review its details and open the verified download link on its listing page. Review Android permissions and publisher information before installing any APK.'],
-    ['Which Yono game is best for new users?', 'Compare game formats, minimum withdrawal, bonus terms, ratings and support options. New users should start with free practice modes and should not select an app only because it advertises a large bonus.'],
+    ['What is Yono Game?', 'Yono Game is a search term people use for Android card, rummy and skill-game apps with signup rewards, tournaments, wallet features and withdrawal options. This homepage helps users compare those Yono game listings before opening any download link.'],
+    ['What are Yono Games?', 'Yono Games refers to a group of Android skill-game and rummy app listings. Yono Games independently organizes app names, bonuses, ratings, minimum withdrawals, features and installation guidance for comparison.'],
+    ['How can I download a Yono Game APK?', 'Choose a Yono game listing, review its details, then open the download link on the app page. Check Android permissions, publisher information, bonus rules and local eligibility before installing any APK.'],
+    ['Which Yono game is best for new users?', 'Compare game formats, minimum withdrawal, bonus terms, ratings, support options and practice modes. New users should not select a Yono game only because it advertises a large bonus.'],
     ['Are Yono Games available in every Indian state?', 'Real-money gaming rules vary by state. Users must be at least 18 years old and should confirm local eligibility before registering, depositing or joining a paid contest.'],
     ['Does Yono Games own the listed apps?', 'No. Yono Games is an independent discovery website and does not own, host or operate the listed games.'],
   ];
@@ -89,17 +100,33 @@ export default async function HomeRoute() {
         '@type': ['CollectionPage', 'WebPage'],
         '@id': `${domain}/#webpage`,
         url: domain,
-        name: 'Yono Games - APK Directory and App Comparison',
-        description: 'Compare Yono Games APK listings, bonuses, ratings, withdrawal details and Android installation guides.',
+        name: 'Yono Games - Yono Game APK Directory and App Comparison',
+        headline: 'Yono Games and Yono Game APK Download Directory',
+        description: 'Compare Yono game and Yono Games APK listings, bonuses, ratings, withdrawal details, safety notes and Android installation guides.',
         inLanguage: 'en-IN',
         isPartOf: { '@id': `${domain}/#website` },
         mainEntity: { '@id': `${domain}/#yono-games-list` },
+        about: ['Yono Game', 'Yono Games', 'Yono Games APK', 'Android rummy apps', 'Skill game apps India'],
+        audience: {
+          '@type': 'Audience',
+          audienceType: 'Adults in India researching Yono game APK and Yono Games app listings',
+          geographicArea: { '@type': 'Country', name: 'India' },
+        },
+        primaryImageOfPage: { '@type': 'ImageObject', url: image },
         speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', '#choose-yono-app', '#yono-faq'] },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${domain}/#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Yono Games Home', item: domain },
+        ],
       },
       {
         '@type': 'ItemList',
         '@id': `${domain}/#yono-games-list`,
-        name: 'Yono Games APK Directory',
+        name: 'Yono Game and Yono Games APK Directory',
+        description: 'Ranked Yono game listings with bonus, rating, Android APK and comparison details.',
         numberOfItems: activeApps.length,
         itemListOrder: 'https://schema.org/ItemListOrderAscending',
         itemListElement: activeApps.slice(0, 30).map((app: any, index: number) => ({
