@@ -1,6 +1,6 @@
 import React from 'react';
-import { Eye, ShieldAlert, FileText } from 'lucide-react';
-import { Metadata } from 'next';
+import { Eye, ShieldAlert, FileText, Gamepad, AlertTriangle } from 'lucide-react';
+import type { Metadata } from 'next';
 import PublicShell from '../../components/PublicShell';
 
 const privacySeoSections = [
@@ -148,15 +148,61 @@ export default function PrivacyPolicyPage() {
         </div>
       </section>
 
+      <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 border-b border-slate-100 pb-2.5">
+          <Gamepad size={15} className="text-emerald-600" />
+          <h2 className="text-sm font-extrabold text-slate-800">Play Responsibly</h2>
+        </div>
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 space-y-2">
+          <div className="flex items-start gap-2">
+            <AlertTriangle size={14} className="text-emerald-600 mt-0.5 shrink-0" />
+            <p className="text-[11px] text-emerald-800 font-semibold leading-relaxed">
+              Yono Games is an independent app discovery and comparison platform. We do not host, operate, or process 
+              payments for any of the listed games. Real-money gaming, including rummy and skill-based apps, involves 
+              financial risk and may lead to financial loss. Please read the following before downloading or registering:
+            </p>
+          </div>
+          <ul className="space-y-1.5 text-[11px] text-emerald-700 font-semibold leading-relaxed ml-5 list-disc">
+            <li>You must be at least 18 years old to play real-money games.</li>
+            <li>Gaming laws vary by state and country — check local eligibility before playing.</li>
+            <li>Set deposit limits, play within your means, and never chase losses.</li>
+            <li>Take regular breaks and avoid playing when stressed or under the influence.</li>
+            <li>If you or someone you know has a gambling problem, seek help at responsible gaming helplines.</li>
+            <li>Yono Games listings are for informational purposes — we do not guarantee bonuses, winnings, or withdrawals.</li>
+          </ul>
+        </div>
+      </section>
+
       <section className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
         <h2 className="text-sm font-extrabold text-slate-800">Privacy Policy FAQ</h2>
-        <div className="space-y-3 text-left">
+        <div className="divide-y divide-slate-100 text-left">
           {privacyFaqs.map((faq) => (
-            <div key={faq.question} className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-              <h3 className="text-[11px] font-extrabold text-slate-800">{faq.question}</h3>
-              <p className="text-[11px] text-slate-500 font-semibold leading-relaxed mt-1">{faq.answer}</p>
-            </div>
+            <details key={faq.question} className="group">
+              <summary className="flex items-center justify-between gap-3 cursor-pointer list-none py-3 px-1 text-[11px] font-extrabold text-slate-800 hover:text-[#2C3EFE] transition-colors">
+                {faq.question}
+                <span className="text-sm text-slate-400 shrink-0 group-open:hidden">+</span>
+                <span className="text-sm text-slate-400 shrink-0 hidden group-open:block">−</span>
+              </summary>
+              <p className="pb-3 px-1 text-[11px] text-slate-500 font-semibold leading-relaxed">{faq.answer}</p>
+            </details>
           ))}
+        </div>
+      </section>
+
+      <section className="bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-xs">
+        <div className="flex items-start gap-3">
+          <AlertTriangle size={18} className="text-amber-600 mt-0.5 shrink-0" />
+          <div className="space-y-1.5">
+            <h3 className="text-xs font-extrabold text-amber-800">Disclaimer</h3>
+            <p className="text-[11px] text-amber-700 font-semibold leading-relaxed">
+              Yono Games provides app listings, bonus comparisons, and download links for informational and educational 
+              purposes only. We are not a gaming operator, do not process deposits or withdrawals, and do not guarantee 
+              the accuracy, completeness, or availability of third-party promotions. All app information — including 
+              bonuses, withdrawal limits, ratings, and features — may change without notice. Users are responsible for 
+              verifying terms, local legality, and app safety before downloading or playing. Real-money gaming carries 
+              financial risk. Play responsibly and seek help if needed.
+            </p>
+          </div>
         </div>
       </section>
 

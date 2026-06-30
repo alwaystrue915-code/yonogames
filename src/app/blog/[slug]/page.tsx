@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           {post.image && (
             <div className="aspect-[16/9] rounded-2xl overflow-hidden mb-8 border border-slate-200 shadow-sm">
-              <img src={post.image} alt={post.title} fetchpriority="high" className="w-full h-full object-cover" />
+              <img src={post.image} alt={post.title} fetchPriority="high" className="w-full h-full object-cover" />
             </div>
           )}
 
