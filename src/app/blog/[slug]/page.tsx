@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           {post.image && (
             <div className="aspect-[16/9] rounded-2xl overflow-hidden mb-8 border border-slate-200 shadow-sm">
-              <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+              <img src={post.image} alt={post.title} fetchpriority="high" className="w-full h-full object-cover" />
             </div>
           )}
 
@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: Props) {
           {post.authorName && (
             <div className="flex items-center gap-3 mb-6">
               {post.authorImage ? (
-                <img src={post.authorImage} alt={post.authorName} className="w-10 h-10 rounded-full object-cover" />
+                <img src={post.authorImage} alt={post.authorName} loading="lazy" decoding="async" className="w-10 h-10 rounded-full object-cover" />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-[#2C3EFE]/10 flex items-center justify-center"><User size={16} className="text-[#2C3EFE]" /></div>
               )}
@@ -190,7 +190,7 @@ export default async function BlogPostPage({ params }: Props) {
                   <Link key={p.slug} href={`/blog/${p.slug}`} className="group flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white no-underline transition hover:border-slate-300">
                     {p.image && (
                       <div className="w-20 h-16 shrink-0 rounded-lg overflow-hidden bg-slate-100">
-                        <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
+                        <img src={p.image} alt={p.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="min-w-0">

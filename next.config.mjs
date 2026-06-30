@@ -2,16 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    unoptimized: true,
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      }
+      { protocol: 'https', hostname: 'allrummybonus.com' },
+      { protocol: 'https', hostname: 'app.nexapk.in' },
+      { protocol: 'https', hostname: '*.wp.com' },
+      { protocol: 'https', hostname: '*.wordpress.com' },
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http', hostname: '**' },
     ],
   },
   async rewrites() {

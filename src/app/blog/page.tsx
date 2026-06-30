@@ -222,7 +222,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { q?: 
                   <Link key={post.slug} href={`/blog/${post.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white no-underline shadow-sm transition hover:shadow-md">
                     <div className="aspect-[16/9] w-full overflow-hidden bg-slate-100">
                       {post.image ? (
-                        <img src={post.image} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <img src={post.image} alt={post.title} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       ) : (
                         <div className="flex h-full items-center justify-center text-slate-300"><BookOpen size={30} /></div>
                       )}

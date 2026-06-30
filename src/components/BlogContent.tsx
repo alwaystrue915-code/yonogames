@@ -26,14 +26,14 @@ export default function BlogContent({ htmlContent, content }: { htmlContent?: st
     <div className="mb-8">
       {tocEntries.length > 0 && (
         <details open className="group mb-6 rounded-xl border border-slate-200 bg-white overflow-hidden">
-          <summary className="flex items-center gap-2 px-4 py-3 cursor-pointer list-none text-xs font-extrabold text-slate-700 hover:bg-slate-50 transition-colors">
-            <span className="text-base shrink-0 group-open:rotate-45 transition-transform">+</span>
+          <summary className="flex items-center gap-2 px-4 py-3 cursor-pointer list-none text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors select-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="w-3.5 h-3.5 text-[#2C3EFE] shrink-0"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
             Table of Contents
           </summary>
-          <div className="border-t border-slate-100 px-4 py-3 space-y-2">
+          <div className="border-t border-slate-100 divide-y divide-slate-100">
             {tocEntries.map((entry) => (
               <a key={entry.id} href={`#${entry.id}`}
-                className="flex items-center gap-2.5 text-xs font-bold no-underline text-slate-700 hover:text-[#2C3EFE] transition-colors"
+                className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-medium no-underline text-slate-600 hover:text-[#2C3EFE] hover:bg-slate-50 transition-colors"
                 onClick={(e) => { e.preventDefault(); document.getElementById(entry.id)?.scrollIntoView({ behavior: 'smooth' }); }}
               ><span className="w-1.5 h-1.5 rounded-full bg-[#2C3EFE] shrink-0" />{entry.text}</a>
             ))}
