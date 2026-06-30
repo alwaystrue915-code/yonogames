@@ -219,7 +219,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { q?: 
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {remainingPosts.map((post) => (
-                  <Link key={post.slug} href={`/blog/${post.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white no-underline shadow-sm transition hover:shadow-md">
+                  <Link prefetch={true} key={post.slug} href={`/blog/${post.slug}`} className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white no-underline shadow-sm transition hover:shadow-md">
                     <div className="aspect-[16/9] w-full overflow-hidden bg-slate-100">
                       {post.image ? (
                         <img src={post.image} alt={post.title} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />

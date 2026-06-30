@@ -33,7 +33,7 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
   // -------------------------------------------------------------
   if (variant === 'compact') {
     return (
-      <Link
+      <Link prefetch={true}
         href={`/app/${app.slug}`}
         onClick={(e) => {
           if (onSelect) {
@@ -70,7 +70,7 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
     const isRank2 = rank === 2;
 
     return (
-      <Link
+      <Link prefetch={true}
         href={`/app/${app.slug}`}
         onClick={(e) => {
           if (onSelect) {
@@ -173,7 +173,7 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
   }
 
   return (
-    <Link
+    <Link prefetch={true}
       href={`/app/${app.slug}`}
       onClick={(e) => {
         if (onSelect) {

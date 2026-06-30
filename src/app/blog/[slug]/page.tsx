@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function BlogPostPage({ params }: Props) {
   const post = await db.blog.findBySlug(params.slug);
@@ -187,7 +187,7 @@ export default async function BlogPostPage({ params }: Props) {
               <h2 className="text-sm font-extrabold text-slate-800 mb-4">Similar Blogs</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {similarPosts.map((p) => (
-                  <Link key={p.slug} href={`/blog/${p.slug}`} className="group flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white no-underline transition hover:border-slate-300">
+                  <Link prefetch={true} key={p.slug} href={`/blog/${p.slug}`} className="group flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-white no-underline transition hover:border-slate-300">
                     {p.image && (
                       <div className="w-20 h-16 shrink-0 rounded-lg overflow-hidden bg-slate-100">
                         <img src={p.image} alt={p.title} loading="lazy" decoding="async" className="w-full h-full object-cover" />
