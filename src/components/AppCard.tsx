@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Star, ShieldCheck, Award, Download, Crown, Medal } from 'lucide-react';
 import { AppDetail } from '../types';
@@ -14,24 +14,19 @@ interface AppCardProps {
 }
 
 export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank, onSelect, cardStyle = 'default' }) => {
-  const [spotlightStyle, setSpotlightStyle] = useState<React.CSSProperties>({});
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (cardStyle === 'spotlight-hover') {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      setSpotlightStyle({
-        background: `radial-gradient(130px circle at ${x}px ${y}px, rgba(59, 130, 246, 0.15), transparent 80%)`
-      });
-    }
-  };
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (cardStyle !== 'spotlight-hover' || !spotlightRef.current) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spotlightRef.current.style.background = `radial-gradient(130px circle at ${x}px ${y}px, rgba(59, 130, 246, 0.15), transparent 80%)`;
+  }, [cardStyle]);
 
-  const handleMouseLeave = () => {
-    if (cardStyle === 'spotlight-hover') {
-      setSpotlightStyle({});
-    }
-  };
+  const handleMouseLeave = useCallback(() => {
+    if (spotlightRef.current) spotlightRef.current.style.background = '';
+  }, []);
 
   // -------------------------------------------------------------
   // VARIANT 1: COMPACT CARD (Sidebar / Small lists)
@@ -192,7 +187,7 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
     >
       {/* Spotlight Hover Glow Overlay */}
       {cardStyle === 'spotlight-hover' && (
-        <div className="absolute inset-0 pointer-events-none rounded-xl transition-opacity duration-300 z-0" style={spotlightStyle} />
+        <div ref={spotlightRef} className="absolute inset-0 pointer-events-none rounded-xl transition-opacity duration-300 z-0" />
       )}
 
       {/* Liquid Glass Shine Reflection layer */}
