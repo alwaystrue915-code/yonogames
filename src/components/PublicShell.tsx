@@ -1,6 +1,7 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { db } from '../lib/db';
 import { Header } from './Header';
 import { AnimatedBackground } from './AnimatedBackground';
 import { StickyCta } from './StickyCta';
@@ -12,19 +13,39 @@ interface PublicShellProps {
   children: React.ReactNode;
 }
 
-export default async function PublicShell({ children }: PublicShellProps) {
-  const [settings, apps] = await Promise.all([
-    db.settings.get(),
-    db.apps.find()
-  ]);
+const defaultSettings: any = {
+  siteName: 'YonoV2',
+  siteTitle: 'Yono Games – Premium App Discovery & Play Platform',
+  siteDescription: 'Discover, compare and download premium rummy and skill apps.',
+  footerText: '© 2026 Yono Games. Play Responsibly. 18+ Only.',
+  footerAdActive: false,
+  backgroundType: 'white',
+  siteDomain: 'https://yonogamelive.app',
+  headerLogo: '/img/header-logo.png',
+  headerTitle: 'YONO GAMES',
+  headerSubtitle: 'Verified APK Lobbies',
+  telegramLink: 'https://telegram.me/aaron7512',
+  userRating: 4.8,
+  ratingCount: 12842,
+  telegramSubscribers: '32K+',
+  verifiedApps: '89+',
+  dailyPayouts: '₹50K+'
+};
 
-  const cleanSettings = JSON.parse(JSON.stringify(settings));
-  const cleanApps = JSON.parse(JSON.stringify(apps));
+export default function PublicShell({ children }: PublicShellProps) {
+  const [settings, setSettings] = useState<any>(defaultSettings);
+  const [topApp, setTopApp] = useState<any>(null);
 
-  const activeApps = cleanApps.filter((a: any) => a.status === 'active');
-  const topApp = activeApps[0] || null;
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(d => setSettings(d)).catch(() => {});
+    fetch('/api/apps').then(r => r.json()).then((apps: any[]) => {
+      const active = (apps || []).filter((a: any) => a.status === 'active');
+      setTopApp(active[0] || null);
+    }).catch(() => {});
+  }, []);
 
-  const isDarkBg = cleanSettings?.backgroundType === 'dark-luxury-coin' || cleanSettings?.backgroundType === 'card-suit-green';
+  const cleanSettings = settings;
+  const isDarkBg = cleanSettings?.backgroundType === 'dark-lust' || cleanSettings?.backgroundType === 'card-suit-green';
 
   const internalLinks = [
     { href: '/', label: 'Home', desc: 'Latest Yono game picks' },
@@ -39,26 +60,20 @@ export default async function PublicShell({ children }: PublicShellProps) {
       <div className={`mobile-container min-h-screen flex flex-col justify-between relative w-full shadow-xl transition-all duration-300 ${isDarkBg ? 'theme-dark-bg text-slate-100' : 'text-slate-800'
         }`}>
 
-        {/* Falling rupees / luxury coin floating effects */}
         <AnimatedBackground backgroundType={cleanSettings?.backgroundType} />
 
-        {/* Global navigation top header */}
         <Header settings={cleanSettings} />
 
-        {/* Dynamic page content wrapper */}
         <main className="flex-1 p-4 lg:p-8 w-full relative z-10 overflow-x-hidden">
           <PageTransition>
             {children}
           </PageTransition>
         </main>
 
-        {/* Public footer section (sponsored promo cards + responsible warning) */}
         {cleanSettings && (
           <div className="space-y-4 relative z-10">
-            {/* Sponsored Promo Banner */}
             {cleanSettings.footerAdActive && (
               <section className="border border-slate-200 bg-white/80 backdrop-blur-md rounded-2xl shadow-md p-3.5 flex items-center justify-between gap-3 relative overflow-hidden text-left">
-                {/* Gold/emerald light glow */}
                 <div className="absolute -right-6 -bottom-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl pointer-events-none" />
 
                 <div className="flex items-center gap-3 min-w-0">
@@ -91,9 +106,7 @@ export default async function PublicShell({ children }: PublicShellProps) {
               </section>
             )}
 
-            {/* Site footer */}
             <footer>
-              {/* Footer links */}
               <div className="mt-2 p-2.5" style={{ backgroundColor: 'rgb(17, 24, 39)' }}>
                 <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
                   {internalLinks.map((item) => (
@@ -112,10 +125,7 @@ export default async function PublicShell({ children }: PublicShellProps) {
           </div>
         )}
 
-        {/* Sticky bottom CTA banner */}
         <StickyCta topApp={topApp} />
-
-        {/* Compare matrix deck tray */}
         <CompareDeck />
 
       </div>
