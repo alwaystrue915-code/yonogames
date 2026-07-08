@@ -829,21 +829,25 @@ export const db = {
 
       // Check if adminPasswordHash is missing or needs initialization
       if (!conf.adminPasswordHash || conf.adminEmail !== 'botgo@app') {
-        const bcryptjs = require('bcryptjs');
-        const hash = bcryptjs.hashSync('yoonogames#980', 10);
-        conf.adminEmail = 'botgo@app';
-        conf.adminPasswordHash = hash;
+        try {
+          const bcryptjs = require('bcryptjs');
+          const hash = bcryptjs.hashSync('yoonogames#980', 10);
+          conf.adminEmail = 'botgo@app';
+          conf.adminPasswordHash = hash;
 
-        if (useMongo) {
-          conf = await SettingsModel.findOneAndUpdate(
-            {},
-            { $set: { adminEmail: conf.adminEmail, adminPasswordHash: conf.adminPasswordHash } },
-            { new: true }
-          ).lean();
-        } else {
-          const dbData = readJsonDb();
-          dbData.settings = conf;
-          writeJsonDb(dbData);
+          if (useMongo) {
+            conf = await SettingsModel.findOneAndUpdate(
+              {},
+              { $set: { adminEmail: conf.adminEmail, adminPasswordHash: conf.adminPasswordHash } },
+              { new: true }
+            ).lean();
+          } else {
+            const dbData = readJsonDb();
+            dbData.settings = conf;
+            writeJsonDb(dbData);
+          }
+        } catch (e) {
+          console.error('Failed to initialize admin password:', e);
         }
       }
 

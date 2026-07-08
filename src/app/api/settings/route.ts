@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
 
+const stripSensitive = (data: any) => {
+  const { adminPasscode, adminPasswordHash, ...rest } = data || {};
+  return rest;
+};
+
 export async function GET() {
   try {
     const settings = await db.settings.get();
-    const { adminPasscode, ...publicSettings } = settings as any;
-    return NextResponse.json(publicSettings);
+    return NextResponse.json(stripSensitive(settings));
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -20,9 +24,9 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const updated = await db.settings.update(body);
-    const { adminPasscode, ...publicSettings } = updated as any;
-    return NextResponse.json(publicSettings);
+    const { adminPasscode, adminPasswordHash, ...safeBody } = body;
+    const updated = await db.settings.update(safeBody);
+    return NextResponse.json(stripSensitive(updated));
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
