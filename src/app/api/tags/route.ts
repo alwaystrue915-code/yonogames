@@ -12,12 +12,12 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
     const tagData = await request.json();
     const created = await db.tags.create(tagData);
     return NextResponse.json(created, { status: 201 });

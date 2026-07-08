@@ -3,10 +3,10 @@ import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  if (!(await verifyAdmin(request))) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
   try {
+    if (!(await verifyAdmin(request))) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     const data = await request.json();
     const { _id, id, ...clean } = data;
     const post = await db.blog.update(params.id, clean);
@@ -21,10 +21,10 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  if (!(await verifyAdmin(request))) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
   try {
+    if (!(await verifyAdmin(request))) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     const ok = await db.blog.delete(params.id);
     if (!ok) {
       return NextResponse.json({ message: 'Not found' }, { status: 404 });

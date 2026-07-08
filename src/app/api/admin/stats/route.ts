@@ -3,10 +3,10 @@ import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
 
 export async function GET(request: Request) {
-  if (!(await verifyAdmin(request))) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
   try {
+    if (!(await verifyAdmin(request))) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
     const [metrics, apps, blogPosts] = await Promise.all([
       db.analytics.find(),
       db.apps.find(),

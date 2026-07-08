@@ -22,12 +22,12 @@ export async function GET(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
     const deletedCount = await db.apps.deleteAll();
     return NextResponse.json({ message: `Deleted ${deletedCount} apps.`, deletedCount });
   } catch (error: any) {
@@ -36,12 +36,12 @@ export async function DELETE(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
     const appData = await request.json();
     if (!appData.name || !appData.slug) {
       return NextResponse.json({ message: 'Name and unique slug are required.' }, { status: 400 });

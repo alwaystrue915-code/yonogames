@@ -29,8 +29,8 @@ export default function AppsListPage() {
   const handleDelete = async (slug: string) => {
     if (!confirm('Delete this app?')) return;
     try {
-      await fetch(`/api/apps/${slug}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-      fetchApps();
+      const res = await fetch(`/api/apps/${slug}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) fetchApps();
     } catch (e) { console.error(e); }
   };
 

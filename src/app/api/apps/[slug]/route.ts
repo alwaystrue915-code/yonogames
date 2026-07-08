@@ -18,13 +18,13 @@ export async function GET(request: Request, { params }: { params: { slug: string
 }
 
 export async function PUT(request: Request, { params }: { params: { slug: string } }) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
-  const { slug } = params;
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
+    const { slug } = params;
     const appData = await request.json();
     const updated = await db.apps.update(slug, appData);
     if (!updated) {
@@ -37,13 +37,13 @@ export async function PUT(request: Request, { params }: { params: { slug: string
 }
 
 export async function DELETE(request: Request, { params }: { params: { slug: string } }) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
-  const { slug } = params;
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
+    const { slug } = params;
     const deleted = await db.apps.delete(slug);
     if (!deleted) {
       return NextResponse.json({ message: 'Application not found.' }, { status: 404 });

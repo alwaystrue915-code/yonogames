@@ -60,31 +60,32 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ settings, onRefres
     setSaveError('');
 
     try {
+      const body = {
+        footerAdImage: adImage.trim(),
+        footerAdLink: adLink.trim(),
+        footerAdActive: adActive,
+        banner1: banner1.trim(),
+        banner2: banner2.trim(),
+        banner3: banner3.trim(),
+        banner4: banner4.trim(),
+        footerAdLogo: footerAdLogo.trim(),
+        footerAdName: footerAdName.trim(),
+        footerAdDesc: footerAdDesc.trim(),
+        telegramLink: telegramLink.trim(),
+        userRating,
+        ratingCount,
+        telegramSubscribers: telegramSubscribers.trim(),
+        verifiedApps: verifiedApps.trim(),
+        dailyPayouts: dailyPayouts.trim()
+      };
+
       const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          ...settings,
-          footerAdImage: adImage.trim(),
-          footerAdLink: adLink.trim(),
-          footerAdActive: adActive,
-          banner1: banner1.trim(),
-          banner2: banner2.trim(),
-          banner3: banner3.trim(),
-          banner4: banner4.trim(),
-          footerAdLogo: footerAdLogo.trim(),
-          footerAdName: footerAdName.trim(),
-          footerAdDesc: footerAdDesc.trim(),
-          telegramLink: telegramLink.trim(),
-          userRating,
-          ratingCount,
-          telegramSubscribers: telegramSubscribers.trim(),
-          verifiedApps: verifiedApps.trim(),
-          dailyPayouts: dailyPayouts.trim()
-        })
+        body: JSON.stringify(body)
       });
 
       if (res.ok) {

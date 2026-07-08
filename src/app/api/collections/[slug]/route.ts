@@ -3,13 +3,13 @@ import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
 
 export async function PUT(request: Request, { params }: { params: { slug: string } }) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
-  const { slug } = params;
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
+    const { slug } = params;
     const collData = await request.json();
     const updated = await db.collections.update(slug, collData);
     if (!updated) {

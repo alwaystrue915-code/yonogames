@@ -17,17 +17,17 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const isAdmin = await verifyAdmin(request);
-  if (!isAdmin) {
-    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
-  }
-
   try {
+    const isAdmin = await verifyAdmin(request);
+    if (!isAdmin) {
+      return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+    }
+
     const body = await request.json();
-    const { adminPasscode, adminPasswordHash, ...safeBody } = body;
+    const { _id, __v, adminPasscode, adminPasswordHash, ...safeBody } = body;
     const updated = await db.settings.update(safeBody);
     return NextResponse.json(stripSensitive(updated));
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: error.message || 'Failed to save settings.' }, { status: 500 });
   }
 }
