@@ -562,6 +562,20 @@ export const db = {
         writeJsonDb(dbData);
         return dbData.apps.length < initialLen;
       }
+    },
+
+    deleteAll: async (): Promise<number> => {
+      await connectDb();
+      if (useMongo) {
+        const res = await AppModel.deleteMany({});
+        return res.deletedCount;
+      } else {
+        const dbData = readJsonDb();
+        const count = dbData.apps.length;
+        dbData.apps = [];
+        writeJsonDb(dbData);
+        return count;
+      }
     }
   },
 

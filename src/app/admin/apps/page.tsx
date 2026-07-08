@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Search, Edit3, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit3, Trash2, AlertTriangle, X } from 'lucide-react';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import AdminShell from '../../../components/admin/AdminShell';
 import { AppDetail } from '../../../types';
@@ -12,6 +12,8 @@ export default function AppsListPage() {
   const [apps, setApps] = useState<AppDetail[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
+  const [deletingAll, setDeletingAll] = useState(false);
 
   const fetchApps = async () => {
     setLoading(true);
@@ -32,6 +34,18 @@ export default function AppsListPage() {
     } catch (e) { console.error(e); }
   };
 
+  const handleDeleteAll = async () => {
+    setDeletingAll(true);
+    try {
+      const res = await fetch('/api/apps', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        setShowDeleteAllModal(false);
+        fetchApps();
+      }
+    } catch (e) { console.error(e); }
+    setDeletingAll(false);
+  };
+
   if (authLoading) {
     return <div className="min-h-screen bg-[#f2f2f7] flex items-center justify-center"><div className="w-8 h-8 border-[3px] border-[#34C759]/20 border-t-[#34C759] rounded-full animate-spin" /></div>;
   }
@@ -50,10 +64,18 @@ export default function AppsListPage() {
             <h1 className="text-2xl font-black text-gray-900 tracking-tight">Apps</h1>
             <p className="text-sm text-gray-400 font-medium mt-0.5">{apps.length} total apps</p>
           </div>
-          <Link href="/admin/apps/new"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2C3EFE] text-white rounded-2xl font-bold text-sm hover:bg-[#2230d6] transition-all shadow-sm">
-            <Plus className="w-4 h-4" /> New App
-          </Link>
+          <div className="flex items-center gap-2">
+            {apps.length > 0 && (
+              <button onClick={() => setShowDeleteAllModal(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-2xl font-bold text-sm hover:bg-red-600 transition-all shadow-sm cursor-pointer">
+                <Trash2 className="w-4 h-4" /> Delete All
+              </button>
+            )}
+            <Link href="/admin/apps/new"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2C3EFE] text-white rounded-2xl font-bold text-sm hover:bg-[#2230d6] transition-all shadow-sm">
+              <Plus className="w-4 h-4" /> New App
+            </Link>
+          </div>
         </div>
 
         <div className="relative">
@@ -99,6 +121,32 @@ export default function AppsListPage() {
           </div>
         )}
       </div>
+
+      {showDeleteAllModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 mx-4 max-w-sm w-full shadow-2xl">
+            <div className="flex items-center justify-center w-14 h-14 bg-red-50 rounded-2xl mx-auto mb-4">
+              <AlertTriangle className="w-7 h-7 text-red-500" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 text-center">Delete All Apps?</h3>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              This will permanently delete all {apps.length} apps. This action cannot be undone.
+            </p>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setShowDeleteAllModal(false)}
+                disabled={deletingAll}
+                className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all disabled:opacity-50">
+                Cancel
+              </button>
+              <button onClick={handleDeleteAll}
+                disabled={deletingAll}
+                className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all disabled:opacity-50 cursor-pointer">
+                {deletingAll ? 'Deleting...' : 'Delete All'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminShell>
   );
 }

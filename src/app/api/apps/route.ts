@@ -21,6 +21,20 @@ export async function GET(request: Request) {
   }
 }
 
+export async function DELETE(request: Request) {
+  const isAdmin = await verifyAdmin(request);
+  if (!isAdmin) {
+    return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
+  }
+
+  try {
+    const deletedCount = await db.apps.deleteAll();
+    return NextResponse.json({ message: `Deleted ${deletedCount} apps.`, deletedCount });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   const isAdmin = await verifyAdmin(request);
   if (!isAdmin) {
