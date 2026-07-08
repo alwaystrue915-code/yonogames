@@ -5,6 +5,8 @@ import { AppDetailPage } from '../../../components/AppDetailPage';
 import { Metadata } from 'next';
 import PublicShell from '../../../components/PublicShell';
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: Promise<{ slug: string }> | { slug: string };
 };

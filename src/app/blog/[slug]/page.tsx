@@ -6,6 +6,8 @@ import { Calendar, Clock, Eye, Tag, User } from 'lucide-react';
 import PublicShell from '../../../components/PublicShell';
 import BlogContent from '../../../components/BlogContent';
 
+export const dynamic = 'force-dynamic';
+
 const siteUrl = 'https://yononewgamess.com';
 
 interface Props {
@@ -42,8 +44,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: `${domain}/blog/${post.slug}` },
   };
 }
-
-export const revalidate = 3600;
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;

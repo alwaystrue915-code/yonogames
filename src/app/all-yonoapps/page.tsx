@@ -4,6 +4,8 @@ import { AllYonoAppsPage } from '../../components/AllYonoAppsPage';
 import { Metadata } from 'next';
 import PublicShell from '../../components/PublicShell';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'All Yono Apps Download 2026 - Yono Games APK List, Bonus & Reviews',
   description: 'Explore all Yono apps in one searchable directory. Compare Yono Games APK bonus, ratings, categories, minimum withdrawal, download guides and India eligibility notes.',
