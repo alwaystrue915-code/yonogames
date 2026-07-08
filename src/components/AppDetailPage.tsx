@@ -90,7 +90,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
                 <span className="text-[10px] font-bold text-slate-400">Android APK</span>
               </div>
               <h1 className="break-words text-xl font-extrabold leading-tight text-slate-900 sm:text-3xl">
-                {app.name} APK Download
+                {app.name}
               </h1>
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold text-slate-600">
                 <span className="inline-flex items-center gap-1 text-amber-600"><Star size={14} fill="currentColor" /> {app.rating} / 5</span>

@@ -142,7 +142,7 @@ export default async function AppRoute({ params }: Props) {
         '@type': 'WebPage',
         '@id': `${pageUrl}#webpage`,
         url: pageUrl,
-        name: cleanApp.seoTitle || `${cleanApp.name} APK Download`,
+        name: cleanApp.seoTitle || cleanApp.name,
         description: seoDesc,
         inLanguage: 'en-IN',
         isPartOf: { '@id': `${domain}/#website` },
