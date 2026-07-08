@@ -7,7 +7,9 @@ const stripSensitive = (data: any) => {
   return rest;
 };
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: Request) {
   try {
     const settings = await db.settings.get();
     return NextResponse.json(stripSensitive(settings));

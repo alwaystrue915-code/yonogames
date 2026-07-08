@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Lock, ShieldAlert, ArrowRight, Mail, Key } from 'lucide-react';
+import { Lock, ShieldAlert, ArrowRight, Mail, Key, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
 export const AdminAuth: React.FC = () => {
@@ -10,6 +10,7 @@ export const AdminAuth: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,15 +70,19 @@ export const AdminAuth: React.FC = () => {
             <label className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider block">Security Password</label>
             <div className="relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
                 disabled={loading}
                 autoComplete="new-password"
-                className="w-full h-10 pl-10 pr-4 rounded-xl text-xs outline-none text-slate-800 bg-white border border-slate-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/10 transition-all font-mono tracking-widest"
+                className="w-full h-10 pl-10 pr-10 rounded-xl text-xs outline-none text-slate-800 bg-white border border-slate-300 focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/10 transition-all font-bold"
               />
               <Key size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer bg-transparent border-0 p-0">
+                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+              </button>
             </div>
           </div>
 
