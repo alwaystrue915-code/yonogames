@@ -77,7 +77,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }
 
   if (activeTab === 'trending') {
-    displayedApps = displayedApps.filter((app) => app.priority && app.priority > 0);
+    displayedApps = [...displayedApps].sort((a, b) => (b.priority || 0) - (a.priority || 0));
   } else if (activeTab === 'new') {
     displayedApps = displayedApps.filter((app) => app.isNewPick || app.tags?.some((tag) => /new/i.test(tag)));
   }
