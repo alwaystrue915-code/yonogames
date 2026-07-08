@@ -820,11 +820,11 @@ export const db = {
         if (!conf) {
           conf = await SettingsModel.create(defaultSettings);
         } else {
-          conf = { ...defaultSettings, ...Object.fromEntries(Object.entries(conf || {}).filter(([_, v]) => v !== '' && v !== undefined && v !== null)) };
+          conf = { ...defaultSettings, ...Object.fromEntries(Object.entries(conf || {}).filter(([_, v]) => v !== undefined && v !== null)) };
         }
       } else {
         const dbData = readJsonDb();
-        conf = { ...defaultSettings, ...Object.fromEntries(Object.entries(dbData.settings || {}).filter(([_, v]) => v !== '' && v !== undefined && v !== null)) };
+        conf = { ...defaultSettings, ...Object.fromEntries(Object.entries(dbData.settings || {}).filter(([_, v]) => v !== undefined && v !== null)) };
       }
 
       // Check if adminPasswordHash is missing or needs initialization
