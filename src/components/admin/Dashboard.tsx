@@ -584,7 +584,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       type="text"
                       value={siteDomain}
                       onChange={(e) => setSiteDomain(e.target.value)}
-                      placeholder="e.g., https://yononewgamess.com"
+                      placeholder="e.g., https://yonogamelive.app"
                       className="w-full h-9 px-3 rounded-lg text-xs bg-white border border-slate-300 text-slate-850 outline-none focus:border-blue-500 font-bold"
                     />
                     <p className="text-[9px] text-slate-400 font-semibold uppercase">Define the primary website domain. Saving this generates a new sitemap XML dynamically.</p>

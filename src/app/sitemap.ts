@@ -3,7 +3,7 @@ import { db } from '../lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await db.settings.get();
-  const domain = settings?.siteDomain || 'https://yononewgamess.com';
+  const domain = settings?.siteDomain || 'https://yonogamelive.app';
 
   const apps = await db.apps.find({ status: 'active' });
   const posts = await db.blog.find({ status: 'published' });

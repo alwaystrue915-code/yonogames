@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const domain = settings?.siteDomain || 'https://yononewgamess.com';
+  const domain = settings?.siteDomain || 'https://yonogamelive.app';
   const pageUrl = `${domain}/app/${app.slug}`;
   const imageUrl = app.logo.startsWith('http') ? app.logo : `${domain}${app.logo}`;
 
@@ -120,7 +120,7 @@ export default async function AppRoute({ params }: Props) {
   const cleanApps = JSON.parse(JSON.stringify(apps));
   const cleanSettings = JSON.parse(JSON.stringify(settings));
 
-  const domain = cleanSettings?.siteDomain || 'https://yononewgamess.com';
+  const domain = cleanSettings?.siteDomain || 'https://yonogamelive.app';
   const imageUrl = cleanApp.logo.startsWith('http') ? cleanApp.logo : `${domain}${cleanApp.logo}`;
   const seoDesc = cleanApp.seoDescription || `Download ${cleanApp.name} APK. Bonus: ${cleanApp.bonus || 'N/A'}.`;
   const pageUrl = `${domain}/app/${cleanApp.slug}`;

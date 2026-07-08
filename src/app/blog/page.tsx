@@ -6,7 +6,7 @@ import PublicShell from '../../components/PublicShell';
 import BlogSearch from '../../components/BlogSearch';
 import { BlogPost } from '../../types';
 
-const siteUrl = 'https://yononewgamess.com';
+const siteUrl = 'https://yonogamelive.app';
 
 export const metadata: Metadata = {
   title: 'Yono Games Blog - APK Guides, Rummy Tips, Bonus Updates & Safety',

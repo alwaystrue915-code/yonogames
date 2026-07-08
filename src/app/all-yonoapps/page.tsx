@@ -60,7 +60,7 @@ export default async function AllYonoAppsRoute() {
   const cleanApps = JSON.parse(JSON.stringify(apps));
   const cleanCategories = JSON.parse(JSON.stringify(categories));
   const cleanSettings = JSON.parse(JSON.stringify(settings));
-  const domain = cleanSettings?.siteDomain || process.env.NEXT_PUBLIC_SITE_URL || 'https://yononewgamess.com';
+  const domain = cleanSettings?.siteDomain || process.env.NEXT_PUBLIC_SITE_URL || 'https://yonogamelive.app';
   const activeApps = cleanApps.filter((app: any) => app.status === 'active' && app.isAllApps !== false);
   const topApps = [...activeApps]
     .sort((a: any, b: any) => (b.priority || 0) - (a.priority || 0))

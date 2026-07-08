@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 
 export async function GET() {
   const settings = await db.settings.get();
-  const domain = settings?.siteDomain || 'https://yononewgamess.com';
+  const domain = settings?.siteDomain || 'https://yonogamelive.app';
   const siteName = settings?.siteName || 'Yono Games';
   const siteDesc = settings?.siteDescription || 'Premium App Discovery & Play Platform';
 

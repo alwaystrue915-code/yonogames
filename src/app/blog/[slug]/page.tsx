@@ -8,7 +8,7 @@ import BlogContent from '../../../components/BlogContent';
 
 export const dynamic = 'force-dynamic';
 
-const siteUrl = 'https://yononewgamess.com';
+const siteUrl = 'https://yonogamelive.app';
 
 interface Props {
   params: Promise<{ slug: string }>;
