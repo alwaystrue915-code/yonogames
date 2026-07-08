@@ -9,16 +9,12 @@ import BlogContent from '../../../components/BlogContent';
 const siteUrl = 'https://yononewgamess.com';
 
 interface Props {
-  params: { slug: string };
-}
-
-export async function generateStaticParams() {
-  const posts = await db.blog.find({ status: 'published', featured: undefined });
-  return posts.map(post => ({ slug: post.slug }));
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await db.blog.findBySlug(params.slug);
+  const { slug } = await params;
+  const post = await db.blog.findBySlug(slug);
   if (!post) return {};
   const domain = siteUrl;
   return {
@@ -50,10 +46,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 3600;
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await db.blog.findBySlug(params.slug);
+  const { slug } = await params;
+  const post = await db.blog.findBySlug(slug);
   if (!post || post.status !== 'published') notFound();
 
-  await db.blog.incrementViews(params.slug);
+  await db.blog.incrementViews(slug);
 
   const settings = await db.settings.get();
   const allPosts = await db.blog.find({ status: 'published' });
