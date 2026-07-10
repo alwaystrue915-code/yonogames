@@ -12,30 +12,29 @@ export async function GET(request: Request) {
     }
 
     const encoder = new TextEncoder();
-    let interval: ReturnType<typeof setInterval>;
 
     const stream = new ReadableStream({
       start(controller) {
+        let active = true;
+        const enqueue = (data: string) => { try { controller.enqueue(encoder.encode(data)); } catch { /* controller closed */ } };
+
         const send = async () => {
+          if (!active) return;
           try {
             const data = await getGa4Realtime();
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+            if (!active) return;
+            enqueue(`data: ${JSON.stringify(data)}\n\n`);
           } catch {
-            controller.enqueue(encoder.encode(`data: {"activeUsers":0}\n\n`));
+            enqueue(`data: {"activeUsers":0}\n\n`);
           }
+          if (active) setTimeout(send, 10000);
         };
 
         send();
-        interval = setInterval(send, 10000);
 
-        request.signal.addEventListener('abort', () => {
-          clearInterval(interval);
-          controller.close();
-        });
+        request.signal.addEventListener('abort', () => { active = false; });
       },
-      cancel() {
-        clearInterval(interval);
-      },
+      cancel() { /* noop */ },
     });
 
     return new Response(stream, {
