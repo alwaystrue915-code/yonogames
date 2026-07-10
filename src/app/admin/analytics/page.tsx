@@ -131,26 +131,30 @@ export default function AdminAnalyticsPage() {
 
   useEffect(() => {
     if (!token) return;
+    let mounted = true;
     setLoading(true);
     fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
-      .then((data) => { if (data && !data.message) setStats(data); })
+      .then((data) => { if (mounted && data && !data.message) setStats(data); })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => { if (mounted) setLoading(false); });
+    return () => { mounted = false; };
   }, [token]);
 
   useEffect(() => {
     if (!token) return;
+    let mounted = true;
     const evtSource = new EventSource(`/api/admin/ga-live?token=${token}`);
     evtSource.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
-        if (data.activeUsers !== undefined) {
+        if (mounted && data.activeUsers !== undefined) {
           setStats((prev) => prev ? { ...prev, realtimeUsers: data.activeUsers } : prev);
         }
       } catch {}
     };
-    return () => evtSource.close();
+    evtSource.onerror = () => evtSource.close();
+    return () => { mounted = false; evtSource.close(); };
   }, [token]);
 
   const s = stats || {
