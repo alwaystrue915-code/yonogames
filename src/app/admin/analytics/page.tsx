@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart,
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts';
 import {
   Eye, MousePointerClick, Users, Timer, Radio, TrendingUp, Share2, Link2, Search,
-  Earth, Chrome, Globe2, Instagram, Facebook,
+  Earth, Chrome, Globe2, Instagram, Facebook, ChevronDown, Filter,
 } from 'lucide-react';
 import { useAdminAuth } from '@/context/AdminAuthContext';
 import AdminShell from '@/components/admin/AdminShell';
@@ -17,6 +17,8 @@ type TrafficPoint = { key: string; label: string; newVisitor: number; returningV
 type DailyPoint = { key: string; label: string; views: number };
 type DevicePoint = { name: string; value: number; code?: string };
 type EngagementStat = { label: string; value: number; color: string; softColor: string; width: number };
+type RealtimePage = { page: string; activeUsers: number };
+type RealtimeData = { activeUsers: number; pages: RealtimePage[] };
 
 type StatsPayload = {
   totalViews: number; totalClicks: number; totalUsers: number; sessions: number;
@@ -28,6 +30,12 @@ type StatsPayload = {
 };
 
 const deviceColors = ['#ff6b00', '#ff2d55', '#5856d6', '#0a84ff'];
+const rangeOptions = [
+  { label: 'Last 7 days', value: '7daysAgo' },
+  { label: 'Last 30 days', value: '30daysAgo' },
+  { label: 'Last 90 days', value: '90daysAgo' },
+  { label: 'Last 12 months', value: '365daysAgo' },
+];
 
 function formatNumber(value: number) {
   return new Intl.NumberFormat('en-US').format(value || 0);
@@ -128,18 +136,21 @@ export default function AdminAnalyticsPage() {
   const [stats, setStats] = useState<StatsPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState('30daysAgo');
+  const [showFilter, setShowFilter] = useState(false);
+  const [realtimePages, setRealtimePages] = useState<RealtimePage[]>([]);
 
   useEffect(() => {
     if (!token) return;
     let mounted = true;
     setLoading(true);
-    fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`/api/admin/stats?range=${encodeURIComponent(dateRange)}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => { if (mounted && data && !data.message) setStats(data); })
       .catch(() => {})
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
-  }, [token]);
+  }, [token, dateRange]);
 
   useEffect(() => {
     if (!token) return;
@@ -147,10 +158,12 @@ export default function AdminAnalyticsPage() {
     const evtSource = new EventSource(`/api/admin/ga-live?token=${token}`);
     evtSource.onmessage = (e) => {
       try {
-        const data = JSON.parse(e.data);
-        if (mounted && data.activeUsers !== undefined) {
+        const data: RealtimeData = JSON.parse(e.data);
+        if (!mounted) return;
+        if (data.activeUsers !== undefined) {
           setStats((prev) => prev ? { ...prev, realtimeUsers: data.activeUsers } : prev);
         }
+        if (Array.isArray(data.pages)) setRealtimePages(data.pages);
       } catch {}
     };
     evtSource.onerror = () => evtSource.close();
@@ -175,6 +188,8 @@ export default function AdminAnalyticsPage() {
     return `${p.title} ${p.path}`.toLowerCase().includes(q);
   });
 
+  const activeRangeLabel = rangeOptions.find((o) => o.value === dateRange)?.label || 'Last 30 days';
+
   return (
     <AdminShell>
       <div className="space-y-6">
@@ -182,12 +197,30 @@ export default function AdminAnalyticsPage() {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div>
             <h1 className="text-2xl font-black tracking-tight sm:text-4xl">Analytics</h1>
-            <p className="mt-1 text-xs font-bold text-gray-400">App & blog traffic overview</p>
+            <p className="mt-1 text-xs font-bold text-gray-400">{activeRangeLabel}</p>
           </div>
-          <label className="flex h-11 min-w-0 items-center gap-3 rounded-xl bg-white px-4 shadow-[0_12px_30px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04] sm:h-12 sm:min-w-[220px]">
-            <Search className="h-5 w-5 text-gray-500" />
-            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search pages" className="w-full bg-transparent text-sm font-bold text-gray-700 outline-none placeholder:text-gray-400" />
-          </label>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <button onClick={() => setShowFilter(!showFilter)}
+                className="flex h-11 items-center gap-2 rounded-xl bg-white px-4 text-xs font-bold shadow-[0_12px_30px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04] sm:h-12 sm:text-sm">
+                <Filter className="h-4 w-4" /> {activeRangeLabel} <ChevronDown className="h-3 w-3" />
+              </button>
+              {showFilter && (
+                <div className="absolute right-0 top-[calc(100%+8px)] z-30 w-56 rounded-2xl bg-white p-3 shadow-[0_18px_45px_rgba(15,23,42,0.16)] ring-1 ring-black/[0.06]">
+                  {rangeOptions.map((o) => (
+                    <button key={o.value} onClick={() => { setDateRange(o.value); setShowFilter(false); }}
+                      className={`block w-full rounded-xl px-3 py-2 text-left text-xs font-black transition-all ${dateRange === o.value ? 'bg-[#34c759] text-white' : 'text-gray-600 hover:bg-gray-50'}`}>
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <label className="flex h-11 min-w-0 items-center gap-3 rounded-xl bg-white px-4 shadow-[0_12px_30px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04] sm:h-12 sm:min-w-[200px]">
+              <Search className="h-5 w-5 text-gray-500" />
+              <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search pages" className="w-full bg-transparent text-sm font-bold text-gray-700 outline-none placeholder:text-gray-400" />
+            </label>
+          </div>
         </div>
 
         {/* Stat cards */}
@@ -275,6 +308,21 @@ export default function AdminAnalyticsPage() {
             </ResponsiveContainer>
           </div>
         </div>
+
+        {/* Realtime Pages */}
+        {realtimePages.length > 0 && (
+          <div className="rounded-[22px] bg-white/80 p-4 shadow-[0_16px_45px_rgba(15,23,42,0.08)] ring-1 ring-black/[0.04] sm:p-5">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-black text-gray-950"><Radio className="h-5 w-5 text-[#34c759]" /> Real-time Pages</h3>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {realtimePages.map((rp) => (
+                <div key={rp.page} className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 text-sm">
+                  <span className="truncate font-bold text-gray-700">{rp.page}</span>
+                  <span className="ml-2 font-black text-[#34c759]">{rp.activeUsers}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Devices + Countries + Browsers + Engagement */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">

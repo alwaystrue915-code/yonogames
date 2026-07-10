@@ -52,8 +52,9 @@ function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   ]);
 }
 
-export async function getGa4Analytics() {
-  const cached = getCached<any>('analytics', CACHE_TTL);
+export async function getGa4Analytics(dateRange?: string) {
+  const cacheKey = dateRange || '30daysAgo';
+  const cached = getCached<any>('analytics-' + cacheKey, CACHE_TTL);
   if (cached) return cached;
 
   try {
@@ -61,7 +62,7 @@ export async function getGa4Analytics() {
     if (!client) return null;
 
     const pid = `properties/${propertyId}`;
-    const range30 = [{ startDate: '30daysAgo', endDate: 'today' }];
+    const range30 = [{ startDate: dateRange || '30daysAgo', endDate: 'today' }];
     const ccMap: Record<string, string> = { India: 'IN', 'United States': 'US', 'United Kingdom': 'GB', Canada: 'CA', Australia: 'AU', Germany: 'DE', France: 'FR', Brazil: 'BR', Japan: 'JP', UAE: 'AE' };
     const socialSources = ['telegram', 'youtube', 'instagram', 'facebook', 'whatsapp', 'twitter', 'linkedin'];
     const organicSources = ['google', 'bing', 'yahoo', 'duckduckgo', 'baidu'];
@@ -136,7 +137,7 @@ export async function getGa4Analytics() {
         { label: 'Views / user', value: viewsPerUser, color: '#34c759', softColor: '#e6f8eb', width: Math.min(100, (viewsPerUser / 8) * 100) },
       ],
     };
-    setCache('analytics', result);
+    setCache('analytics-' + cacheKey, result);
     return result;
   } catch (error: any) {
     console.error('GA4 API error:', error);
@@ -147,8 +148,14 @@ export async function getGa4Analytics() {
 export async function getGa4Realtime() {
   try {
     const client = getClient();
-    if (!client) return { activeUsers: 0 };
-    const r = await withTimeout(realtime(client, { property: `properties/${propertyId}`, metrics: [{ name: 'activeUsers' }] }), 10000, 'realtime-sse');
-    return { activeUsers: parseInt(r?.rows?.[0]?.metricValues?.[0]?.value || '0', 10) };
-  } catch { return { activeUsers: 0 }; }
+    if (!client) return { activeUsers: 0, pages: [] };
+    const [summary, pages] = await Promise.all([
+      withTimeout(realtime(client, { property: `properties/${propertyId}`, metrics: [{ name: 'activeUsers' }] }), 10000, 'realtime-summary'),
+      withTimeout(realtime(client, { property: `properties/${propertyId}`, dimensions: [{ name: 'unifiedScreenName' }], metrics: [{ name: 'activeUsers' }], orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }], limit: 12 }), 10000, 'realtime-pages'),
+    ]);
+    return {
+      activeUsers: parseInt(summary?.rows?.[0]?.metricValues?.[0]?.value || '0', 10),
+      pages: (pages?.rows || []).map((row: any) => ({ page: row.dimensionValues?.[0]?.value || 'Unknown', activeUsers: parseInt(row.metricValues?.[0]?.value || '0', 10) })),
+    };
+  } catch { return { activeUsers: 0, pages: [] }; }
 }

@@ -9,7 +9,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const gaData = await getGa4Analytics();
+    const { searchParams } = new URL(request.url);
+    const range = searchParams.get('range') || undefined;
+    const gaData = await getGa4Analytics(range);
     if (gaData) {
       return NextResponse.json(gaData);
     }
