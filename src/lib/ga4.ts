@@ -1,9 +1,16 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
-function getCredentials() {
+function getCredentials(): object | null {
   const json = process.env.GA_SERVICE_ACCOUNT_JSON;
-  if (!json) return null;
-  try { return JSON.parse(json); } catch { return null; }
+  if (json) {
+    try { return JSON.parse(json); } catch { return null; }
+  }
+  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  if (clientEmail && privateKey) {
+    return { client_email: clientEmail, private_key: privateKey.replace(/\\n/g, '\n') };
+  }
+  return null;
 }
 
 function getClient() {
@@ -12,7 +19,7 @@ function getClient() {
   return new BetaAnalyticsDataClient({ credentials: creds });
 }
 
-const propertyId = process.env.GA_PROPERTY_ID || '544306569';
+const propertyId = process.env.GA4_PROPERTY_ID || process.env.GA_PROPERTY_ID || '544306569';
 
 async function report(client: BetaAnalyticsDataClient, req: any) {
   const result = await (client.runReport(req) as Promise<[any, any, any]>);
