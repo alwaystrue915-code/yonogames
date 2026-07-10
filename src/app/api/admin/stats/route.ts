@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
-import { getGa4Analytics } from '@/lib/ga4';
+import { getGa4Analytics, getGa4Realtime } from '@/lib/ga4';
 
 export async function GET(request: Request) {
   try {
@@ -13,6 +13,8 @@ export async function GET(request: Request) {
     const range = searchParams.get('range') || undefined;
     const gaData = await getGa4Analytics(range);
     if (gaData) {
+      const realtime = await getGa4Realtime();
+      gaData.realtimeUsers = realtime.activeUsers;
       return NextResponse.json(gaData);
     }
 
