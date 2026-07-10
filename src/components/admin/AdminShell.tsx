@@ -35,6 +35,12 @@ export default function AdminShell({ children }: AdminShellProps) {
 
   const activeTab = getActiveTab();
 
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated && pathname !== '/admin') {
+      router.replace('/admin');
+    }
+  }, [authLoading, isAuthenticated, pathname, router]);
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[#f2f2f7] flex items-center justify-center">
@@ -42,12 +48,6 @@ export default function AdminShell({ children }: AdminShellProps) {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated && pathname !== '/admin') {
-      router.replace('/admin');
-    }
-  }, [authLoading, isAuthenticated, pathname, router]);
 
   if (!isAuthenticated) {
     return <>{children}</>;
