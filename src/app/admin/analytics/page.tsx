@@ -139,6 +139,20 @@ export default function AdminAnalyticsPage() {
       .finally(() => setLoading(false));
   }, [token]);
 
+  useEffect(() => {
+    if (!token) return;
+    const evtSource = new EventSource(`/api/admin/ga-live?token=${token}`);
+    evtSource.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.activeUsers !== undefined) {
+          setStats((prev) => prev ? { ...prev, realtimeUsers: data.activeUsers } : prev);
+        }
+      } catch {}
+    };
+    return () => evtSource.close();
+  }, [token]);
+
   const s = stats || {
     totalViews: 0, totalClicks: 0, totalUsers: 0, sessions: 0, pageViews: 0, realtimeUsers: 0,
     newUsers: 0, returningUsers: 0, traffic: [], dailyViews: [], devices: [], countries: [],

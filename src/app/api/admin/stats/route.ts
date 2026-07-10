@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
+import { getGa4Analytics } from '@/lib/ga4';
 
 export async function GET(request: Request) {
   try {
     if (!(await verifyAdmin(request))) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
+
+    const gaData = await getGa4Analytics();
+    if (gaData) {
+      return NextResponse.json(gaData);
+    }
+
     const [metrics, apps, blogPosts] = await Promise.all([
       db.analytics.find(),
       db.apps.find(),
@@ -16,7 +23,6 @@ export async function GET(request: Request) {
     const totalViews = metrics.reduce((s, m) => s + m.views, 0);
     const totalClicks = metrics.reduce((s, m) => s + m.clicks, 0);
 
-    // Build daily views from all app history
     const dailyMap = new Map<string, number>();
     let totalNew = 0, totalReturning = 0;
     for (const m of metrics) {
@@ -32,55 +38,38 @@ export async function GET(request: Request) {
       const views = dailyMap.get(date) || 0;
       const short = date.slice(5);
       dailyViews.push({ key: date, label: short, views });
-      // Rough split: 60% new, 40% returning
       totalNew += Math.round(views * 0.6);
       totalReturning += Math.round(views * 0.4);
     }
 
-    // Traffic data (new vs returning split)
     const traffic = dailyViews.map((d) => ({
-      key: d.key,
-      label: d.label,
+      key: d.key, label: d.label,
       newVisitor: Math.round(d.views * 0.6),
       returningVisitor: Math.round(d.views * 0.4),
     }));
 
-    // App pages as top pages
-    const topPages = metrics
+    const topAppPages = metrics
       .map((m) => {
         const app = apps.find((a) => a.slug === m.appSlug);
-        return {
-          path: `/app/${m.appSlug}`,
-          title: app?.name || m.appSlug,
-          viewCount: m.views,
-          lastViewedAt: m.history?.length ? m.history[m.history.length - 1].date : null,
-        };
+        return { path: `/app/${m.appSlug}`, title: app?.name || m.appSlug, viewCount: m.views, lastViewedAt: m.history?.length ? m.history[m.history.length - 1].date : null };
       })
       .sort((a, b) => b.viewCount - a.viewCount)
       .slice(0, 10);
 
-    // Blog pages as top pages
     const blogPages = blogPosts
       .filter((p) => p.status === 'published')
-      .map((p) => ({
-        path: `/blog/${p.slug}`,
-        title: p.title,
-        viewCount: p.views || 0,
-        lastViewedAt: p.updatedAt || p.date || null,
-      }))
+      .map((p) => ({ path: `/blog/${p.slug}`, title: p.title, viewCount: p.views || 0, lastViewedAt: p.updatedAt || p.date || null }))
       .sort((a, b) => b.viewCount - a.viewCount)
       .slice(0, 5);
 
-    const allPages = [...topPages, ...blogPages].sort((a, b) => b.viewCount - a.viewCount).slice(0, 10);
+    const allPages = [...topAppPages, ...blogPages].sort((a, b) => b.viewCount - a.viewCount).slice(0, 10);
 
-    // Devices (mock realistic splits)
     const devices = [
       { name: 'Mobile', value: Math.round(totalViews * 0.72) },
       { name: 'Desktop', value: Math.round(totalViews * 0.19) },
       { name: 'Tablet', value: Math.round(totalViews * 0.09) },
     ];
 
-    // Countries (mock)
     const countries = [
       { name: 'India', value: Math.round(totalViews * 0.78), code: 'IN' },
       { name: 'United States', value: Math.round(totalViews * 0.08), code: 'US' },
@@ -90,7 +79,6 @@ export async function GET(request: Request) {
       { name: 'UAE', value: Math.round(totalViews * 0.02), code: 'AE' },
     ];
 
-    // Browsers (mock)
     const browsers = [
       { name: 'Chrome', value: Math.round(totalViews * 0.62) },
       { name: 'Samsung Internet', value: Math.round(totalViews * 0.14) },
@@ -100,7 +88,6 @@ export async function GET(request: Request) {
       { name: 'Firefox', value: Math.round(totalViews * 0.02) },
     ];
 
-    // Social/Referral/Organic (mock, based on total views)
     const socialTraffic = [
       { name: 'Telegram', value: Math.round(totalViews * 0.35) },
       { name: 'YouTube', value: Math.round(totalViews * 0.22) },
@@ -124,7 +111,6 @@ export async function GET(request: Request) {
       { name: 'DuckDuckGo', value: Math.round(totalViews * 0.07) },
     ];
 
-    // Engagement stats
     const totalUsers = Math.round(totalViews * 0.35);
     const sessions = Math.round(totalViews * 0.52);
     const pagesPerSession = sessions > 0 ? totalViews / sessions : 0;
@@ -138,24 +124,10 @@ export async function GET(request: Request) {
     ];
 
     return NextResponse.json({
-      totalViews,
-      totalClicks,
-      totalUsers,
-      sessions,
-      pageViews: totalViews,
-      realtimeUsers: Math.round(totalViews * 0.003),
-      newUsers: totalNew,
-      returningUsers: totalReturning,
-      devices,
-      countries,
-      browsers,
-      socialTraffic,
-      referralTraffic,
-      organicTraffic,
-      topPages: allPages,
-      dailyViews,
-      traffic,
-      engagementStats,
+      totalViews, totalClicks, totalUsers, sessions, pageViews: totalViews,
+      realtimeUsers: Math.round(totalViews * 0.003), newUsers: totalNew, returningUsers: totalReturning,
+      devices, countries, browsers, socialTraffic, referralTraffic, organicTraffic,
+      topPages: allPages, dailyViews, traffic, engagementStats,
     });
   } catch (e: any) {
     return NextResponse.json({ message: e.message }, { status: 500 });
