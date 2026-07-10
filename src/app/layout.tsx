@@ -125,9 +125,9 @@ export default function RootLayout({
   return (
     <html lang="en-IN" className={nunito.variable}>
       <body>
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-0X7D361W51" strategy="afterInteractive" />
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-0X7D361W51'}`} strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-0X7D361W51');`}
+          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-0X7D361W51'}');`}
         </Script>
         <script
           type="application/ld+json"
