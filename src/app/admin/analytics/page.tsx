@@ -146,8 +146,8 @@ export default function AdminAnalyticsPage() {
     setLoading(true);
     fetch(`/api/admin/stats?range=${encodeURIComponent(dateRange)}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
-      .then((data) => { if (mounted && data && !data.message) setStats(data); })
-      .catch(() => {})
+      .then((data) => { if (mounted && data && !data.message) setStats(data); else if (mounted) setStats(null); })
+      .catch(() => { if (mounted) setStats(null); })
       .finally(() => { if (mounted) setLoading(false); });
     return () => { mounted = false; };
   }, [token, dateRange]);
