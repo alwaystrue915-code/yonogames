@@ -144,7 +144,7 @@ export default function AdminAnalyticsPage() {
     if (!token) return;
     let mounted = true;
     setLoading(true);
-    fetch(`/api/admin/stats?range=${encodeURIComponent(dateRange)}`, { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`/api/admin/stats?range=${encodeURIComponent(dateRange)}`, { cache: 'no-store', headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => { if (mounted && data && !data.message) setStats(data); else if (mounted) setStats(null); })
       .catch(() => { if (mounted) setStats(null); })
@@ -166,7 +166,7 @@ export default function AdminAnalyticsPage() {
         if (Array.isArray(data.pages)) setRealtimePages(data.pages);
       } catch {}
     };
-    evtSource.onerror = () => evtSource.close();
+    evtSource.onerror = () => {};
     return () => { mounted = false; evtSource.close(); };
   }, [token]);
 
@@ -266,8 +266,8 @@ export default function AdminAnalyticsPage() {
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: '#73788a', fontSize: 12, fontWeight: 700 }} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fill: '#73788a', fontSize: 12, fontWeight: 700 }} />
                   <Tooltip contentStyle={{ borderRadius: 14, border: '1px solid rgba(0,0,0,0.06)', boxShadow: '0 12px 30px rgba(15,23,42,0.12)' }} />
-                  <Area type="monotone" dataKey="newVisitor" stroke="#34c759" strokeWidth={4} fill="url(#nv)" dot={{ r: 0 }} activeDot={{ r: 7, strokeWidth: 4, stroke: '#fff' }} />
-                  <Area type="monotone" dataKey="returningVisitor" stroke="#0a9ff0" strokeWidth={4} fill="url(#rv)" dot={{ r: 0 }} activeDot={{ r: 7, strokeWidth: 4, stroke: '#fff' }} />
+                  <Area type="monotone" dataKey="newVisitor" stroke="#34c759" strokeWidth={4} fill="url(#nv)" dot={{ r: s.traffic.length === 1 ? 6 : 3, strokeWidth: 2, fill: '#34c759', stroke: '#fff' }} activeDot={{ r: 7, strokeWidth: 4, stroke: '#fff' }} />
+                  <Area type="monotone" dataKey="returningVisitor" stroke="#0a9ff0" strokeWidth={4} fill="url(#rv)" dot={{ r: s.traffic.length === 1 ? 6 : 3, strokeWidth: 2, fill: '#0a9ff0', stroke: '#fff' }} activeDot={{ r: 7, strokeWidth: 4, stroke: '#fff' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -280,7 +280,7 @@ export default function AdminAnalyticsPage() {
                 <div key={page.path}>
                   <div className="mb-1 flex items-center justify-between gap-3 text-sm">
                     <span className="flex min-w-0 items-center gap-2 truncate font-bold text-gray-700">
-                      <img src="/favicon-96x96.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-md object-contain shadow-sm ring-1 ring-black/5" />
+                      <img src="/favicon/favicon-96x96.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-md object-contain shadow-sm ring-1 ring-black/5" />
                       <span className="truncate">{page.path === '/' ? 'Homepage' : page.title || page.path}</span>
                     </span>
                     <span className="font-black text-gray-950">{formatNumber(page.viewCount)}</span>

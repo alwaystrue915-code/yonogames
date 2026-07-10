@@ -23,9 +23,10 @@ export async function GET(request: Request) {
           try {
             const data = await getGa4Realtime();
             if (!active) return;
-            enqueue(`data: ${JSON.stringify(data)}\n\n`);
+            if (data.available) enqueue(`data: ${JSON.stringify(data)}\n\n`);
+            else enqueue(`event: ping\ndata: {}\n\n`);
           } catch {
-            enqueue(`data: {"activeUsers":0}\n\n`);
+            enqueue(`event: ping\ndata: {}\n\n`);
           }
           if (active) setTimeout(send, 10000);
         };

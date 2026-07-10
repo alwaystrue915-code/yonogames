@@ -265,7 +265,8 @@ export async function connectDb() {
     return;
   }
   try {
-    console.log(`Connecting to MongoDB at: ${mongoUri}...`);
+    // Never print the connection URI: it commonly contains database credentials.
+    console.log('Connecting to MongoDB...');
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 10000 });
     useMongo = true;
     isConnected = true;

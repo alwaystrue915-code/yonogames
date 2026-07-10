@@ -10,12 +10,14 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const range = searchParams.get('range') || undefined;
+    const requestedRange = searchParams.get('range');
+    const allowedRanges = new Set(['7daysAgo', '30daysAgo', '90daysAgo', '365daysAgo']);
+    const range = requestedRange && allowedRanges.has(requestedRange) ? requestedRange : undefined;
     const gaData = await getGa4Analytics(range);
     if (gaData) {
       const realtime = await getGa4Realtime();
-      gaData.realtimeUsers = realtime.activeUsers;
-      return NextResponse.json(gaData);
+      if (realtime.available) gaData.realtimeUsers = realtime.activeUsers;
+      return NextResponse.json(gaData, { headers: { 'Cache-Control': 'private, no-store' } });
     }
 
     return NextResponse.json(null);
