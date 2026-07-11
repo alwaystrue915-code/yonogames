@@ -12,12 +12,6 @@ export const metadata: Metadata = {
   },
 };
 
-const disclaimerParagraphs = [
-  'Yono Games operates strictly as an independent review portal and app directory. All graphics, brand names, product logos, and download redirect destinations displayed on this site remain the intellectual property of their respective owners. We do not claim any partnership, ownership, or endorsement by the listed app developers.',
-  'Online gaming involving real money carries substantial financial risk and can be addictive. Yono Games does not encourage, sponsor, or host paid tournaments, betting pools, or card tables. The information on this website is for comparison, informational, and educational purposes only.',
-  'Certain Indian states (such as Andhra Pradesh, Telangana, Assam, Odisha, Sikkim, Nagaland, and others) may restrict or ban real-money gaming activities. It is your responsibility to examine the public regulations and state laws in your specific region before choosing to install any external APK, deposit cash, or join cash tables.'
-];
-
 export default function DisclaimerPage() {
   return (
     <PublicShell>
@@ -40,10 +34,21 @@ export default function DisclaimerPage() {
             <h2 className="text-sm font-extrabold text-slate-800">Operational Disclaimers</h2>
           </div>
 
-          <div className="space-y-4 text-xs text-slate-650 leading-relaxed font-medium">
-            {disclaimerParagraphs.map((p, index) => (
-              <p key={index}>{p}</p>
-            ))}
+          <div className="space-y-4 text-xs text-slate-600 leading-relaxed font-medium">
+            <p><strong>1. Introduction to our Directory Role</strong></p>
+            <p>Hey, thanks for stopping by Yono Games. Before you click any buttons or get excited about the mobile card games we review, we need to make some things completely clear. Yono Games works only as an independent informational reviews portal and app directory. We write helpful guides, list game specifications (like welcome offers or withdrawal limits), and give redirect download links. However, we do not claim any official partnership, trademark ownership, or direct endorsement from the companies or developers who make these apps.</p>
+
+            <p><strong>2. Financial Risk Warning (Real Money Games)</strong></p>
+            <p>Playing Rummy, Teen Patti, Slots, or online casinos involves real money, which means there is a real risk of losing your cash. These games can also become addictive if not played responsibly. We want to be 100% honest with you: Yono Games does not encourage you to gamble, we do not sponsor tournaments, and we do not manage card tables or bets. Any cash you deposit on third-party apps is your own decision. Never play with money you cannot afford to lose, and do not treat card gaming as a job or a way to earn a steady income.</p>
+
+            <p><strong>3. Regional Legal Rules in India</strong></p>
+            <p>Online gaming laws in India are highly localized. Some states, including Andhra Pradesh, Telangana, Assam, Odisha, Sikkim, and Nagaland, have put restrictions or complete bans on skill-based real money card games. If you live in one of these states, you should not download cash gaming APK files. It is your job to check the local regulations in your state or city before you install any game from this site. Yono Games is not responsible for any legal issues or account blocks you experience due to playing from restricted areas.</p>
+
+            <p><strong>4. Accuracy and Validity of App Information</strong></p>
+            <p>We do our best to list verified signup bonuses, features, download links, and specifications. But app features, promotional bonuses, and payment systems are updated frequently by their respective developers. We cannot guarantee that all details will always be 100% current. Please double-check the rules, signup terms, and transaction policies inside the official app before you register or add any funds to your wallet.</p>
+
+            <p><strong>5. Zero Liability for Financial Losses</strong></p>
+            <p>Yono Games, its team, and operators are not liable for any money lost, app installation failures, transaction delays, account closures, or poor game experiences on external platforms. If something goes wrong with your deposits or payouts on a listed app, you must reach out to their customer support team. We do not have control over their servers, wallets, or payment channels.</p>
           </div>
         </section>
 

@@ -12,25 +12,6 @@ export const metadata: Metadata = {
   },
 };
 
-const terms = [
-  {
-    title: '1. Directory Purpose Only',
-    body: 'Yono Games is an independent informational directory for skill-based and Rummy APK platforms. We do not host games, process money, handle player deposits, or manage withdrawals. All downloads, registration bonuses, and play actions occur on external third-party servers.'
-  },
-  {
-    title: '2. User Eligibility & Jurisdiction',
-    body: 'By browsing Yono Games, you represent that you are at least 18 years of age and that real-money online gaming is legal in your state or region. It is your sole responsibility to check local restrictions before installing any listed application.'
-  },
-  {
-    title: '3. Accuracy of Listings',
-    body: 'While we work to supply correct bonus amounts, minimum withdrawal amounts, rating scales, and download URLs, developer offers can change without notice. We are not responsible for any outdated information or changed app terms.'
-  },
-  {
-    title: '4. Third-Party Relationships',
-    body: 'Any transaction, deposit, account registration, gameplay history, or dispute is strictly between you and the respective third-party app operator. Yono Games does not provide customer support for external services.'
-  }
-];
-
 export default function TermsPage() {
   return (
     <PublicShell>
@@ -53,13 +34,36 @@ export default function TermsPage() {
             <h2 className="text-sm font-extrabold text-slate-800">Website Usage Terms</h2>
           </div>
 
-          <div className="space-y-4 text-xs text-slate-650 leading-relaxed font-medium">
-            {terms.map((term, i) => (
-              <div key={i} className="space-y-1.5">
-                <h3 className="text-xs font-extrabold text-slate-800">{term.title}</h3>
-                <p>{term.body}</p>
-              </div>
-            ))}
+          <div className="space-y-4 text-xs text-slate-600 leading-relaxed font-medium">
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-800">1. Welcome to Yono Games Directory</h3>
+              <p>Hey there! Welcome to Yono Games. Before you start looking through all the Rummy, Teen Patti, and card gaming apps we have listed here, please take a quick minute to read these terms. By using our website, you agree to follow these basic rules. If you do not agree with anything written here, it is best if you do not use this site. We keep this platform clean and straightforward to help you compare different gaming apps available online.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-800">2. We Are Just a Directory (Not a Casino!)</h3>
+              <p>First things first, let\'s make it absolutely clear: Yono Games is an independent informational directory. We do not host any of these games on our own servers, we do not handle your money, we do not accept deposits, and we certainly do not process withdrawals. All the app download links, logos, welcome bonuses, and features you see here are for review and discovery. When you click a download button, you are redirected to third-party app stores or official developer websites. Everything that happens next is entirely between you and that third-party app.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-850">3. Age Limit and Local Game Laws</h3>
+              <p>Since the apps we review involve skill-based cash gaming and card matches, you must be at least 18 years old to use our website and download any listed APK files. Online real-money gaming has strict legal boundaries. For example, states like Andhra Pradesh, Telangana, Assam, Odisha, Sikkim, and Nagaland have restricted cash-based gaming apps. It is your job to make sure online gaming is legal in your city, state, or country before you install anything or deposit any cash. We do not provide legal advice, so please stay informed and follow your local rules.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-850">4. Listing Accuracy & Outdated Information</h3>
+              <p>We work really hard to keep our app database updated with correct signup bonuses, minimum withdrawal limits, game categories, and download URLs. However, app developers change their terms, bonuses, and policies all the time without letting us know. Because of this, we cannot promise that 100% of the details are accurate at all times. We highly recommend that you verify the bonus rates and gameplay terms inside the official app once you download it. Think of Yono Games as your starting point for research, not as a permanent guarantee of third-party offers.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-850">5. Limitation of Liability</h3>
+              <p>Yono Games, its creators, and team members are not responsible for any financial losses, gameplay disputes, account bans, or withdrawal delays you might face on third-party apps. We supply comparison data to help you make your own choices. Any money you deposit or spend on listed apps is at your own risk. If you face any account issues, you should contact the customer support team of that specific game app directly, as we do not have access to their database or payment systems.</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-xs font-extrabold text-slate-850">6. Changes to these Terms</h3>
+              <p>We might update these Terms & Conditions from time to time to keep up with new laws or changes in our directory features. Whenever we make changes, we will update the "Last Updated" date at the top of this page. Your continued use of the website after an update means you accept the new terms. We suggest checking back once in a while to stay updated on how we operate.</p>
+            </div>
           </div>
         </section>
 

@@ -30,7 +30,6 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
   settings
 }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [descExpanded, setDescExpanded] = useState(false);
   const downloadLink = `/go/${app.slug}`;
 
   // Find related apps in the same category (excluding current app)
@@ -44,8 +43,67 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
     setOpenFaq(openFaq === index ? null : index);
   };
 
+  // Full FAQ list — reused for both JSON-LD schema and the accordion UI
+  const faqList = [
+    ...(app.faqs || []),
+    { question: `Is ${app.name} safe to use?`, answer: `Yes, ${app.name} is a verified platform with 256-bit encryption for all transactions. It uses secure payment gateways and follows fair play policies. Always download the app from the official link provided on this page.` },
+    { question: `How do I claim the ${app.bonus} bonus on ${app.name}?`, answer: `To claim the ${app.bonus} welcome bonus, click the "Claim Bonus" button on this page, complete your registration via OTP verification, and the bonus will be credited to your in-app wallet instantly. Check the app's terms for wagering requirements.` },
+    { question: `What is the minimum withdrawal on ${app.name}?`, answer: `The minimum withdrawal amount on ${app.name} is ${app.minWithdrawal}. Withdrawals are processed through UPI, bank transfer, or digital wallets and typically take 24-48 hours to reflect in your account.` },
+    { question: `Can I play ${app.name} on multiple devices?`, answer: `Yes, you can use the same account on multiple Android devices. Simply log in with your registered mobile number and OTP on any device. The app supports seamless sync across devices.` },
+    { question: `Does ${app.name} offer free practice games?`, answer: `Yes, ${app.name} offers free practice tables where you can play without depositing real money. This is a great way to learn the rules and improve your skills before playing cash games.` },
+  ];
+
+  // JSON-LD schemas
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yonogamelive.app/' },
+      { '@type': 'ListItem', position: 2, name: app.category || 'Rummy', item: 'https://yonogamelive.app/all-yonoapps' },
+      { '@type': 'ListItem', position: 3, name: app.name, item: `https://yonogamelive.app/apps/${app.slug}` },
+    ],
+  };
+
+  const softwareSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: app.name,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Android',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'INR',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: String(app.rating || '4.2'),
+      ratingCount: String(settings?.ratingCount || 125),
+      bestRating: '5',
+      worstRating: '1',
+    },
+    description: app.seoDescription || `Download ${app.name} APK and get ${app.bonus} bonus. Min withdrawal ${app.minWithdrawal}. Android Rummy app.`,
+    image: app.logo,
+    url: `https://yonogamelive.app/apps/${app.slug}`,
+  };
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqList.map(f => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  };
+
   return (
     <div className="space-y-5 pb-10 animate-fadeIn px-1">
+
+      {/* JSON-LD Structured Data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* Breadcrumb with Schema */}
       <nav aria-label="Breadcrumb">
@@ -97,19 +155,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
                 <span>{app.installs} installs</span>
                 <span>{app.category}</span>
               </div>
-              {app.description && (
-                <div className="mt-3 max-w-xl">
-                  <p className={`text-xs font-semibold leading-relaxed text-slate-500 sm:text-sm ${!descExpanded ? 'line-clamp-2' : ''}`}>
-                    {app.description}
-                  </p>
-                  {app.description.split(' ').length > 25 && (
-                    <button type="button" onClick={() => setDescExpanded(!descExpanded)}
-                      className="mt-1 text-[#2C3EFE] font-extrabold hover:underline cursor-pointer border-0 bg-transparent p-0 text-xs">
-                      {descExpanded ? 'Show less' : 'Read more'}
-                    </button>
-                  )}
-                </div>
-              )}
+
             </div>
           </div>
 
@@ -204,136 +250,21 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
         </div>
       </section>
 
-      {/* SEO-friendly full description with tables */}
-      <section className="rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm sm:p-6">
-        <div className="mb-5 flex items-start gap-3 border-b border-slate-100 pb-4">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[#2C3EFE]">
-            <Smartphone size={18} />
+      {/* Admin-entered article content */}
+      {app.description && (app.description.includes('<p>') || app.description.includes('<h3>') || app.description.includes('<ul>') || app.description.includes('<table>') || app.description.includes('<h2>') || app.description.includes('<h1>')) && (
+        <section className="rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm sm:p-6">
+          <div className="mb-5 flex items-start gap-3 border-b border-slate-100 pb-4">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[#2C3EFE]">
+              <Smartphone size={18} />
+            </div>
+            <div>
+              <span className="text-[9px] font-black uppercase text-[#2C3EFE]">Complete app review</span>
+              <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">About {app.name} APK</h2>
+            </div>
           </div>
-          <div>
-            <span className="text-[9px] font-black uppercase text-[#2C3EFE]">Complete app review</span>
-            <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">About {app.name} APK</h2>
-          </div>
-        </div>
-        <div className="space-y-4 text-[13px] font-medium leading-7 text-slate-600 sm:text-sm">
-          {app.description && (app.description.includes('<p>') || app.description.includes('<h3>') || app.description.includes('<ul>') || app.description.includes('<table>')) ? (
-            <div className="prose max-w-none text-slate-600" dangerouslySetInnerHTML={{ __html: app.description }} />
-          ) : (
-            <>
-              <p>{app.name} is a premium skill-based card gaming platform built exclusively for Android users who seek high-speed matches, real cash rewards, and a trustworthy gaming environment. Whether you are a beginner looking to learn the basics or a seasoned player aiming for tournament glory, this app delivers a complete package that blends entertainment with earning potential.</p>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">What is {app.name}?</h3>
-              <p>{app.name} is an online multiplayer rummy application that allows players to compete in real-time across multiple game formats including Points Rummy, Pool Rummy, and Deals Rummy. The app is designed to offer a smooth and lag-free experience even on low-bandwidth networks, making it accessible to players across India. With a clean interface and one-tap matchmaking, you can jump into a game within seconds of logging in.</p>
-
-              {/* Specs Table */}
-              <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
-                <table className="w-full min-w-[460px] text-[12px]">
-                  <thead>
-                    <tr className="bg-slate-100">
-                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200 w-1/3">Specification</th>
-                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Details</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">App Name</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.name}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Category</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.category}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Rating</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.rating} / 5</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Total Installs</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.installs}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Welcome Bonus</td>
-                      <td className="px-4 py-2.5 text-emerald-700 font-black">{app.bonus}</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Min Withdrawal</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.minWithdrawal}</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2.5 font-bold text-slate-500">Platform</td>
-                      <td className="px-4 py-2.5 text-slate-700 font-semibold">Android APK</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Signup Bonus and Promotions</h3>
-              <p>New players who register on {app.name} receive a welcome bonus of {app.bonus} credited instantly to their in-app wallet after OTP verification. This bonus can be used to enter low-stake tables and get a feel for the platform without risking your own money. In addition to the signup bonus, the app features daily bonus wheel spins where players can win up to Rs. 500 in extra rewards. Regular promotions and referral bonuses keep the excitement alive for returning users.</p>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Game Modes and Variants</h3>
-              <p>{app.name} supports several popular rummy variants to suit different playing styles.</p>
-
-              {/* Game Variants Table */}
-              <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
-                <table className="w-full min-w-[620px] text-[12px]">
-                  <thead>
-                    <tr className="bg-slate-100">
-                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Variant</th>
-                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Description</th>
-                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Best For</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-700">Points Rummy</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Quick rounds with pre-decided point value. Played until a player declares.</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Fast-paced action</td>
-                    </tr>
-                    <tr className="border-b border-slate-100">
-                      <td className="px-4 py-2.5 font-bold text-slate-700">Pool Rummy</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Players compete in larger groups with fixed entry fee and prize pool.</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Group competitions</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-2.5 font-bold text-slate-700">Deals Rummy</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Fixed number of deals per match. Strategic and skill-intensive format.</td>
-                      <td className="px-4 py-2.5 text-slate-600 font-medium">Strategic players</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Security and Fair Play</h3>
-              <p>The platform uses 256-bit encryption to protect all financial transactions and user data. Every game is monitored to ensure fair play, and the random card distribution is certified to prevent any manipulation. Players can deposit and withdraw funds through multiple channels including UPI, bank transfer, and digital wallets. With a minimum withdrawal of just {app.minWithdrawal}, cashing out your winnings is straightforward and hassle-free.</p>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Customer Support and User Experience</h3>
-              <p>{app.name} provides 24/7 dedicated customer support via live chat and email. Whether you have a query about a transaction, a technical glitch, or game rules, the support team is responsive and helpful. The app interface is intuitive, with clearly labeled menus, quick deposit options, and a match history section that lets you track your performance over time.</p>
-
-              <div className="my-5 rounded-lg border border-amber-200 bg-amber-50 p-4 text-left sm:p-5">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-amber-600 shadow-sm">
-                    <ShieldCheck size={19} />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-extrabold text-amber-950">Play Responsibly</h3>
-                    <p className="mt-2 text-xs font-semibold leading-6 text-amber-900">
-                      Real-money gaming should be treated as entertainment, never as a guaranteed source of income. Set a spending and time limit before playing {app.name}, avoid chasing losses, and take regular breaks. Only users aged 18 or above should participate. Check whether cash games are permitted in your state or district before downloading, depositing, or joining a paid contest.
-                    </p>
-                    <p className="mt-2 text-[11px] font-medium leading-5 text-amber-800">
-                      We provide independent app information and download guidance; we do not own, host, or operate {app.name}. Review the app&apos;s official terms, bonus conditions, privacy policy, withdrawal rules, and self-exclusion options before creating an account.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Why Choose {app.name}?</h3>
-              <p>With over {app.installs} downloads and a rating of {app.rating} stars, {app.name} has built a strong reputation in the online rummy community. Players appreciate the fast withdrawals, generous bonus structure, and the variety of game formats available. The app is regularly updated to fix bugs and introduce new features, ensuring a consistently high-quality experience. If you are looking for a reliable rummy app that combines skill-based gameplay with real cash rewards, {app.name} is a solid choice.</p>
-
-              <p className="mt-5 border-t border-slate-100 pt-4 text-[11px] italic leading-relaxed text-slate-400">Disclaimer: This content is for informational purposes only. Playing real-money games involves financial risk. Please read the terms and conditions carefully before participating.</p>
-            </>
-          )}
-        </div>
-      </section>
+          <div className="prose max-w-none text-slate-600 text-[13px] leading-7" dangerouslySetInnerHTML={{ __html: app.description }} />
+        </section>
+      )}
 
       {/* Highlights checklist */}
       <section className="overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
@@ -358,14 +289,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
           <div><span className="text-[9px] font-black uppercase text-slate-400">Need help?</span><h3 className="text-base font-extrabold text-slate-900">Frequently Asked Questions</h3></div>
         </div>
         <div className="flex flex-col gap-2.5">
-          {[
-            ...(app.faqs || []),
-            { question: `Is ${app.name} safe to use?`, answer: `Yes, ${app.name} is a verified platform with 256-bit encryption for all transactions. It uses secure payment gateways and follows fair play policies. Always download the app from the official link provided on this page.` },
-            { question: `How do I claim the ${app.bonus} bonus on ${app.name}?`, answer: `To claim the ${app.bonus} welcome bonus, click the "Claim Bonus" button on this page, complete your registration via OTP verification, and the bonus will be credited to your in-app wallet instantly. Check the app's terms for wagering requirements.` },
-            { question: `What is the minimum withdrawal on ${app.name}?`, answer: `The minimum withdrawal amount on ${app.name} is ${app.minWithdrawal}. Withdrawals are processed through UPI, bank transfer, or digital wallets and typically take 24-48 hours to reflect in your account.` },
-            { question: `Can I play ${app.name} on multiple devices?`, answer: `Yes, you can use the same account on multiple Android devices. Simply log in with your registered mobile number and OTP on any device. The app supports seamless sync across devices.` },
-            { question: `Does ${app.name} offer free practice games?`, answer: `Yes, ${app.name} offers free practice tables where you can play without depositing real money. This is a great way to learn the rules and improve your skills before playing cash games.` },
-          ].map((faq, idx) => {
+          {faqList.map((faq, idx) => {
             const isOpen = openFaq === idx;
             return (
               <div
