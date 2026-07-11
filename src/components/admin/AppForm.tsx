@@ -106,7 +106,6 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
             </div>
           </div>
           <ImageUpload label="Logo" currentUrl={form.logo} onSelect={url => setForm({ ...form, logo: url })} />
-          <ImageUpload label="Banner Image (optional)" currentUrl={form.banner} onSelect={url => setForm({ ...form, banner: url })} />
           <div className="space-y-1">
             <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Download URL</label>
             <input type="text" value={form.downloadUrl} onChange={e => setForm({ ...form, downloadUrl: e.target.value })}
