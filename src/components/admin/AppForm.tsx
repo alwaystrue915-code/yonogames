@@ -92,15 +92,15 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
           <div className="space-y-1">
             <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Name</label>
             <input type="text" value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value, slug: isNew ? genSlug(e.target.value) : form.slug })}
+              onChange={e => setForm({ ...form, name: e.target.value, slug: genSlug(e.target.value) })}
               className="w-full px-4 py-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20" />
           </div>
           <div className="space-y-1">
             <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Slug</label>
             <div className="flex gap-2">
-              <input type="text" value={form.slug} disabled={!isNew}
+              <input type="text" value={form.slug}
                 onChange={e => setForm({ ...form, slug: e.target.value })}
-                className="flex-1 px-4 py-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20 disabled:opacity-50" />
+                className="flex-1 px-4 py-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20" />
               <button type="button" onClick={() => setForm({ ...form, slug: genSlug(form.name) })}
                 className="px-4 py-2 bg-gray-100 rounded-2xl text-xs font-bold text-gray-600 hover:bg-gray-200 cursor-pointer">Auto</button>
             </div>
