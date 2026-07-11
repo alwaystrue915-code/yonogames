@@ -55,6 +55,11 @@ export default function PublicShell({ children }: PublicShellProps) {
     { href: '/privacy-policy', label: 'Privacy Policy', desc: 'Data, links and disclaimers' },
     { href: '/terms-and-conditions', label: 'Terms & Conditions', desc: 'Platform rules and terms' },
     { href: '/disclaimer', label: 'Disclaimer', desc: 'Risk and legal warnings' },
+    { href: '/editorial-policy', label: 'Editorial Policy', desc: 'Publishing and content criteria' },
+    { href: '/review-policy', label: 'Review Policy', desc: 'App review and scoring guidelines' },
+    { href: '/apk-verification', label: 'APK Verification', desc: 'Security hash and package scan procedures' },
+    { href: '/dmca', label: 'DMCA', desc: 'Copyright claims and takedown notices' },
+    { href: '/responsible-gaming', label: 'Responsible Gaming', desc: 'Play safety limits and risk info' },
   ];
 
   return (
