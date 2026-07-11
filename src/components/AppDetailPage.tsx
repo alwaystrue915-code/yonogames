@@ -78,7 +78,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
             <a href={downloadLink} target="_blank" rel="noreferrer noopener nofollow" className="block shrink-0">
               <img
                 src={app.logo}
-                alt={`${app.name} app icon`}
+                alt={`${app.name} APK download – ${app.category} app logo`}
                 className="h-24 w-24 rounded-lg border border-slate-200 bg-white object-cover shadow-md sm:h-32 sm:w-32"
               />
             </a>
@@ -151,6 +151,42 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
         </a>
       </section>
 
+      {/* Screenshots Gallery */}
+      {app.screenshots && app.screenshots.length > 0 && (
+        <section className="rounded-lg border border-slate-200 bg-white overflow-hidden shadow-sm">
+          <div className="flex items-center gap-2.5 px-4 pt-4 pb-3 border-b border-slate-100">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#2C3EFE]">
+              <Smartphone size={16} />
+            </div>
+            <div>
+              <span className="text-[9px] font-black uppercase text-[#2C3EFE]">App Gallery</span>
+              <h2 className="text-sm font-extrabold text-slate-900 leading-none mt-0.5">Screenshots</h2>
+            </div>
+          </div>
+          {/* Horizontal scroll on mobile, wrap on desktop */}
+          <div className="px-4 pb-4 pt-3">
+            <div className="flex gap-2.5 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide sm:grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 sm:overflow-visible sm:pb-0">
+              {app.screenshots.map((src, i) => (
+                <div
+                  key={i}
+                  className="shrink-0 snap-start w-[120px] sm:w-auto rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shadow-sm"
+                  style={{ aspectRatio: '9/16' }}
+                >
+                  <img
+                    src={src}
+                    alt={`${app.name} ${app.category} app screenshot ${i + 1} – how to play and win real cash on Android`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    width={270}
+                    height={480}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Quick install guide */}
       <section id="install-guide" className="scroll-mt-24 rounded-lg border border-slate-200 bg-white p-4 sm:p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -162,7 +198,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
               <span><b className="mr-1 text-[#2C3EFE]">3.</b> Sign up and verify</span>
             </div>
           </div>
-          <a href="#install-guide" className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[#2C3EFE] no-underline hover:text-[#2230d6]">
+          <a href="https://yonogamelive.app/blog/how-to-download-yono-games" target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 text-xs font-black text-[#2C3EFE] no-underline hover:text-[#2230d6]">
             Read full guide <ChevronRight size={15} />
           </a>
         </div>

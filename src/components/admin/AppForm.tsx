@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, ShieldAlert, X } from 'lucide-react';
 import ImageUpload from './ImageUpload';
+import ScreenshotsUpload from './ScreenshotsUpload';
 import { AppDetail } from '../../types';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 
@@ -17,7 +18,8 @@ const defaultForm: AppDetail = {
   rating: 4.5, installs: '100K+', bonus: 'Rs.51', minWithdrawal: '₹100',
   downloadUrl: 'https://www.rummyskill.com', status: 'active', featured: false,
   priority: 0, seoTitle: '', seoDescription: '', faqs: [],
-  isRecommended: false, isNewPick: false, isAllApps: true
+  isRecommended: false, isNewPick: false, isAllApps: true,
+  screenshots: []
 };
 
 export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
@@ -104,6 +106,7 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
             </div>
           </div>
           <ImageUpload label="Logo" currentUrl={form.logo} onSelect={url => setForm({ ...form, logo: url })} />
+          <ImageUpload label="Banner Image (optional)" currentUrl={form.banner} onSelect={url => setForm({ ...form, banner: url })} />
           <div className="space-y-1">
             <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Download URL</label>
             <input type="text" value={form.downloadUrl} onChange={e => setForm({ ...form, downloadUrl: e.target.value })}
@@ -146,6 +149,12 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
           <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3}
             className="w-full px-4 py-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20" />
         </div>
+
+        {/* Screenshots Section */}
+        <ScreenshotsUpload
+          screenshots={form.screenshots || []}
+          onChange={screenshots => setForm({ ...form, screenshots })}
+        />
 
         <div className="space-y-2">
           <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Tags</label>
