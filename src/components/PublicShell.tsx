@@ -50,9 +50,11 @@ export default function PublicShell({ children }: PublicShellProps) {
   const internalLinks = [
     { href: '/', label: 'Home', desc: 'Latest Yono game picks' },
     { href: '/all-yonoapps', label: 'All Yono Apps', desc: 'Browse every APK listing' },
-    { href: '/about-us', label: 'About Us', desc: 'How Yono Games works' },
-    { href: '/contact-us', label: 'Contact Us', desc: 'Corrections and business queries' },
+    { href: '/about', label: 'About Us', desc: 'How Yono Games works' },
+    { href: '/contact', label: 'Contact Us', desc: 'Corrections and business queries' },
     { href: '/privacy-policy', label: 'Privacy Policy', desc: 'Data, links and disclaimers' },
+    { href: '/terms-and-conditions', label: 'Terms & Conditions', desc: 'Platform rules and terms' },
+    { href: '/disclaimer', label: 'Disclaimer', desc: 'Risk and legal warnings' },
   ];
 
   return (
