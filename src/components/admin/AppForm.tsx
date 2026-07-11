@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, ShieldAlert, X } from 'lucide-react';
 import ImageUpload from './ImageUpload';
@@ -34,6 +34,82 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
   const [faqQ, setFaqQ] = useState('');
   const [faqA, setFaqA] = useState('');
   const [tagsInput, setTagsInput] = useState('');
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const summernoteLoaded = useRef(false);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      if (summernoteLoaded.current) return;
+      
+      const loadSummernote = () => {
+        setTimeout(() => {
+          if (!editorRef.current || !(window as any).$?.summernote) return;
+          (window as any).$(editorRef.current!).summernote({
+            height: 350,
+            toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+              ['fontname', ['fontname']],
+              ['fontsize', ['fontsize']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['table', ['table']],
+              ['insert', ['link', 'picture', 'video', 'hr']],
+              ['view', ['fullscreen', 'codeview', 'help']],
+              ['height', ['height']]
+            ],
+            callbacks: {
+              onImageUpload: (files: FileList | File[]) => {
+                const file = files[0];
+                if (!file) return;
+                const fd = new FormData();
+                fd.append('key', 'yonogames-v2');
+                fd.append('image', file);
+                fetch('https://app.nexapk.in/upload.php', { method: 'POST', body: fd })
+                  .then(r => r.json())
+                  .then(data => {
+                    if (data.success) (window as any).$(editorRef.current!).summernote('insertImage', data.url);
+                    else alert(data.error || 'Upload failed');
+                  })
+                  .catch(() => alert('Upload failed'));
+              }
+            }
+          });
+          (window as any).$(editorRef.current!).summernote('code', form.description || '');
+          summernoteLoaded.current = true;
+        }, 100);
+      };
+
+      const loadJS = (src: string, cb: () => void) => {
+        const s = document.createElement('script'); s.src = src; s.onload = () => cb(); document.head.appendChild(s);
+      };
+
+      if (!(window as any).$?.summernote) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css';
+        document.head.appendChild(link);
+        if (!(window as any).$) {
+          loadJS('https://code.jquery.com/jquery-3.7.1.min.js', () => {
+            loadJS('https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js', loadSummernote);
+          });
+        } else {
+          loadJS('https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js', loadSummernote);
+        }
+      } else {
+        loadSummernote();
+      }
+    }
+
+    return () => {
+      try {
+        if (summernoteLoaded.current && (window as any).$?.summernote) {
+          (window as any).$(editorRef.current!).summernote('destroy');
+        }
+      } catch (e) {}
+      summernoteLoaded.current = false;
+    };
+  }, [initialData?.slug]);
 
   useEffect(() => {
     fetch('/api/categories').then(r => r.json()).then(setCategories).catch(() => {});
@@ -51,12 +127,23 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
     e.preventDefault();
     if (!form.name.trim() || !form.slug.trim()) { setError('Name and slug are required.'); return; }
     setSaving(true);
+    
+    let descriptionText = form.description;
+    try {
+      if (summernoteLoaded.current && (window as any).$?.summernote) {
+        const code = (window as any).$(editorRef.current!).summernote('code');
+        if (typeof code === 'string') descriptionText = code;
+      }
+    } catch (err) {}
+
+    const payload = { ...form, description: descriptionText };
+
     try {
       const url = isNew ? '/api/apps' : `/api/apps/${initialData!.slug}`;
       const method = isNew ? 'POST' : 'PUT';
       const res = await fetch(url, {
         method, headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify(form)
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         router.push('/admin/apps');
@@ -144,9 +231,10 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
         </div>
 
         <div className="space-y-1">
-          <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Description</label>
-          <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3}
-            className="w-full px-4 py-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20" />
+          <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Description / Article (Rich Text)</label>
+          <div className="border border-black/[0.06] rounded-2xl overflow-hidden bg-white">
+            <textarea ref={editorRef} value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={10} className="w-full hidden" />
+          </div>
         </div>
 
         {/* Screenshots Section */}

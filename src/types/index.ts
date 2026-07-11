@@ -24,6 +24,7 @@ export interface AppDetail {
   isRecommended?: boolean;
   isNewPick?: boolean;
   isAllApps?: boolean;
+  htmlContent?: string;
 }
 
 export interface Category {

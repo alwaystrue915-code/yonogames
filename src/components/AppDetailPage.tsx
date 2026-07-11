@@ -216,117 +216,122 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
           </div>
         </div>
         <div className="space-y-4 text-[13px] font-medium leading-7 text-slate-600 sm:text-sm">
+          {app.description && (app.description.includes('<p>') || app.description.includes('<h3>') || app.description.includes('<ul>') || app.description.includes('<table>')) ? (
+            <div className="prose max-w-none text-slate-600" dangerouslySetInnerHTML={{ __html: app.description }} />
+          ) : (
+            <>
+              <p>{app.name} is a premium skill-based card gaming platform built exclusively for Android users who seek high-speed matches, real cash rewards, and a trustworthy gaming environment. Whether you are a beginner looking to learn the basics or a seasoned player aiming for tournament glory, this app delivers a complete package that blends entertainment with earning potential.</p>
 
-          <p>{app.name} is a premium skill-based card gaming platform built exclusively for Android users who seek high-speed matches, real cash rewards, and a trustworthy gaming environment. Whether you are a beginner looking to learn the basics or a seasoned player aiming for tournament glory, this app delivers a complete package that blends entertainment with earning potential.</p>
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">What is {app.name}?</h3>
+              <p>{app.name} is an online multiplayer rummy application that allows players to compete in real-time across multiple game formats including Points Rummy, Pool Rummy, and Deals Rummy. The app is designed to offer a smooth and lag-free experience even on low-bandwidth networks, making it accessible to players across India. With a clean interface and one-tap matchmaking, you can jump into a game within seconds of logging in.</p>
 
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">What is {app.name}?</h3>
-          <p>{app.name} is an online multiplayer rummy application that allows players to compete in real-time across multiple game formats including Points Rummy, Pool Rummy, and Deals Rummy. The app is designed to offer a smooth and lag-free experience even on low-bandwidth networks, making it accessible to players across India. With a clean interface and one-tap matchmaking, you can jump into a game within seconds of logging in.</p>
-
-          {/* Specs Table */}
-          <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full min-w-[460px] text-[12px]">
-              <thead>
-                <tr className="bg-slate-100">
-                  <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200 w-1/3">Specification</th>
-                  <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">App Name</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.name}</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Category</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.category}</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Rating</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.rating} / 5</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Total Installs</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.installs}</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Welcome Bonus</td>
-                  <td className="px-4 py-2.5 text-emerald-700 font-black">{app.bonus}</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Min Withdrawal</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.minWithdrawal}</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 font-bold text-slate-500">Platform</td>
-                  <td className="px-4 py-2.5 text-slate-700 font-semibold">Android APK</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">Signup Bonus and Promotions</h3>
-          <p>New players who register on {app.name} receive a welcome bonus of {app.bonus} credited instantly to their in-app wallet after OTP verification. This bonus can be used to enter low-stake tables and get a feel for the platform without risking your own money. In addition to the signup bonus, the app features daily bonus wheel spins where players can win up to Rs. 500 in extra rewards. Regular promotions and referral bonuses keep the excitement alive for returning users.</p>
-
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">Game Modes and Variants</h3>
-          <p>{app.name} supports several popular rummy variants to suit different playing styles.</p>
-
-          {/* Game Variants Table */}
-          <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
-            <table className="w-full min-w-[620px] text-[12px]">
-              <thead>
-                <tr className="bg-slate-100">
-                  <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Variant</th>
-                  <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Description</th>
-                  <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Best For</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-700">Points Rummy</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Quick rounds with pre-decided point value. Played until a player declares.</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Fast-paced action</td>
-                </tr>
-                <tr className="border-b border-slate-100">
-                  <td className="px-4 py-2.5 font-bold text-slate-700">Pool Rummy</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Players compete in larger groups with fixed entry fee and prize pool.</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Group competitions</td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-2.5 font-bold text-slate-700">Deals Rummy</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Fixed number of deals per match. Strategic and skill-intensive format.</td>
-                  <td className="px-4 py-2.5 text-slate-600 font-medium">Strategic players</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">Security and Fair Play</h3>
-          <p>The platform uses 256-bit encryption to protect all financial transactions and user data. Every game is monitored to ensure fair play, and the random card distribution is certified to prevent any manipulation. Players can deposit and withdraw funds through multiple channels including UPI, bank transfer, and digital wallets. With a minimum withdrawal of just {app.minWithdrawal}, cashing out your winnings is straightforward and hassle-free.</p>
-
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">Customer Support and User Experience</h3>
-          <p>{app.name} provides 24/7 dedicated customer support via live chat and email. Whether you have a query about a transaction, a technical glitch, or game rules, the support team is responsive and helpful. The app interface is intuitive, with clearly labeled menus, quick deposit options, and a match history section that lets you track your performance over time.</p>
-
-          <div className="my-5 rounded-lg border border-amber-200 bg-amber-50 p-4 text-left sm:p-5">
-            <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-amber-600 shadow-sm">
-                <ShieldCheck size={19} />
+              {/* Specs Table */}
+              <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
+                <table className="w-full min-w-[460px] text-[12px]">
+                  <thead>
+                    <tr className="bg-slate-100">
+                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200 w-1/3">Specification</th>
+                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">App Name</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.name}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Category</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.category}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Rating</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.rating} / 5</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Total Installs</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.installs}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Welcome Bonus</td>
+                      <td className="px-4 py-2.5 text-emerald-700 font-black">{app.bonus}</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Min Withdrawal</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">{app.minWithdrawal}</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2.5 font-bold text-slate-500">Platform</td>
+                      <td className="px-4 py-2.5 text-slate-700 font-semibold">Android APK</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div>
-                <h3 className="text-sm font-extrabold text-amber-950">Play Responsibly</h3>
-                <p className="mt-2 text-xs font-semibold leading-6 text-amber-900">
-                  Real-money gaming should be treated as entertainment, never as a guaranteed source of income. Set a spending and time limit before playing {app.name}, avoid chasing losses, and take regular breaks. Only users aged 18 or above should participate. Check whether cash games are permitted in your state or district before downloading, depositing, or joining a paid contest.
-                </p>
-                <p className="mt-2 text-[11px] font-medium leading-5 text-amber-800">
-                  We provide independent app information and download guidance; we do not own, host, or operate {app.name}. Review the app&apos;s official terms, bonus conditions, privacy policy, withdrawal rules, and self-exclusion options before creating an account.
-                </p>
+
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Signup Bonus and Promotions</h3>
+              <p>New players who register on {app.name} receive a welcome bonus of {app.bonus} credited instantly to their in-app wallet after OTP verification. This bonus can be used to enter low-stake tables and get a feel for the platform without risking your own money. In addition to the signup bonus, the app features daily bonus wheel spins where players can win up to Rs. 500 in extra rewards. Regular promotions and referral bonuses keep the excitement alive for returning users.</p>
+
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Game Modes and Variants</h3>
+              <p>{app.name} supports several popular rummy variants to suit different playing styles.</p>
+
+              {/* Game Variants Table */}
+              <div className="my-5 overflow-x-auto rounded-lg border border-slate-200">
+                <table className="w-full min-w-[620px] text-[12px]">
+                  <thead>
+                    <tr className="bg-slate-100">
+                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Variant</th>
+                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Description</th>
+                      <th className="text-left px-4 py-2.5 font-black text-slate-700 uppercase tracking-wider border-b border-slate-200">Best For</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-700">Points Rummy</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Quick rounds with pre-decided point value. Played until a player declares.</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Fast-paced action</td>
+                    </tr>
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-2.5 font-bold text-slate-700">Pool Rummy</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Players compete in larger groups with fixed entry fee and prize pool.</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Group competitions</td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-2.5 font-bold text-slate-700">Deals Rummy</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Fixed number of deals per match. Strategic and skill-intensive format.</td>
+                      <td className="px-4 py-2.5 text-slate-600 font-medium">Strategic players</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
-          </div>
 
-          <h3 className="pt-2 text-sm font-extrabold text-slate-900">Why Choose {app.name}?</h3>
-          <p>With over {app.installs} downloads and a rating of {app.rating} stars, {app.name} has built a strong reputation in the online rummy community. Players appreciate the fast withdrawals, generous bonus structure, and the variety of game formats available. The app is regularly updated to fix bugs and introduce new features, ensuring a consistently high-quality experience. If you are looking for a reliable rummy app that combines skill-based gameplay with real cash rewards, {app.name} is a solid choice.</p>
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Security and Fair Play</h3>
+              <p>The platform uses 256-bit encryption to protect all financial transactions and user data. Every game is monitored to ensure fair play, and the random card distribution is certified to prevent any manipulation. Players can deposit and withdraw funds through multiple channels including UPI, bank transfer, and digital wallets. With a minimum withdrawal of just {app.minWithdrawal}, cashing out your winnings is straightforward and hassle-free.</p>
 
-          <p className="mt-5 border-t border-slate-100 pt-4 text-[11px] italic leading-relaxed text-slate-400">Disclaimer: This content is for informational purposes only. Playing real-money games involves financial risk. Please read the terms and conditions carefully before participating.</p>
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Customer Support and User Experience</h3>
+              <p>{app.name} provides 24/7 dedicated customer support via live chat and email. Whether you have a query about a transaction, a technical glitch, or game rules, the support team is responsive and helpful. The app interface is intuitive, with clearly labeled menus, quick deposit options, and a match history section that lets you track your performance over time.</p>
+
+              <div className="my-5 rounded-lg border border-amber-200 bg-amber-50 p-4 text-left sm:p-5">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-amber-600 shadow-sm">
+                    <ShieldCheck size={19} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-extrabold text-amber-950">Play Responsibly</h3>
+                    <p className="mt-2 text-xs font-semibold leading-6 text-amber-900">
+                      Real-money gaming should be treated as entertainment, never as a guaranteed source of income. Set a spending and time limit before playing {app.name}, avoid chasing losses, and take regular breaks. Only users aged 18 or above should participate. Check whether cash games are permitted in your state or district before downloading, depositing, or joining a paid contest.
+                    </p>
+                    <p className="mt-2 text-[11px] font-medium leading-5 text-amber-800">
+                      We provide independent app information and download guidance; we do not own, host, or operate {app.name}. Review the app&apos;s official terms, bonus conditions, privacy policy, withdrawal rules, and self-exclusion options before creating an account.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <h3 className="pt-2 text-sm font-extrabold text-slate-900">Why Choose {app.name}?</h3>
+              <p>With over {app.installs} downloads and a rating of {app.rating} stars, {app.name} has built a strong reputation in the online rummy community. Players appreciate the fast withdrawals, generous bonus structure, and the variety of game formats available. The app is regularly updated to fix bugs and introduce new features, ensuring a consistently high-quality experience. If you are looking for a reliable rummy app that combines skill-based gameplay with real cash rewards, {app.name} is a solid choice.</p>
+
+              <p className="mt-5 border-t border-slate-100 pt-4 text-[11px] italic leading-relaxed text-slate-400">Disclaimer: This content is for informational purposes only. Playing real-money games involves financial risk. Please read the terms and conditions carefully before participating.</p>
+            </>
+          )}
         </div>
       </section>
 
