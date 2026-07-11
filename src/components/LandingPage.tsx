@@ -127,7 +127,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="space-y-3" aria-labelledby="home-search-title">
         <div className="space-y-3">
           <div>
-            <h1 id="home-search-title" className="text-2xl font-extrabold text-slate-900 sm:text-3xl">Yono Games - Yono Game APK Directory</h1>
+            <h1 id="home-search-title" className="text-xl font-bold text-slate-900 sm:text-3xl whitespace-nowrap truncate">Yono Games - Yono Game APK Directory</h1>
             <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Search and compare Yono game and Yono Games APK listings, bonuses, ratings, minimum withdrawals and safe download details.</p>
           </div>
           <div className="grid gap-2 lg:grid-cols-[minmax(0,1fr)_330px] lg:items-stretch">

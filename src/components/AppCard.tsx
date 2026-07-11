@@ -45,8 +45,10 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
       >
         <img
           src={app.logo}
-          alt={`${app.name} Icon`}
+          alt={`${app.name} App Icon`}
           loading="lazy"
+          width={36}
+          height={36}
           className="w-9 h-9 rounded-lg object-cover bg-white border border-slate-200 shrink-0"
         />
         <div className="flex-1 min-w-0 font-sans text-left">
@@ -108,8 +110,10 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
         {/* Icon */}
         <img
           src={app.logo}
-          alt={`${app.name} Premium Logo`}
+          alt={`${app.name} App Logo`}
           loading="lazy"
+          width={48}
+          height={48}
           className="w-12 h-12 rounded-xl object-cover bg-white border border-slate-200 shadow-sm mt-1.5 shrink-0"
         />
 
@@ -211,8 +215,10 @@ export const AppCard: React.FC<AppCardProps> = ({ app, variant = 'medium', rank,
         <div className="shrink-0 relative z-10">
           <img
             src={app.logo}
-            alt={`${app.name} Icon`}
+            alt={`${app.name} App Icon – ${app.category || 'Rummy'} APK`}
             loading="lazy"
+            width={64}
+            height={64}
             className="w-12 h-12 lg:w-16 lg:h-16 rounded-xl object-cover bg-white border border-slate-200 shadow-sm"
           />
         </div>

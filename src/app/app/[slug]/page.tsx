@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageUrl = `${domain}/app/${app.slug}`;
   const imageUrl = app.logo.startsWith('http') ? app.logo : `${domain}${app.logo}`;
 
-  const title = app.seoTitle || `${app.name} - Download APK & Play | Yono Games`;
-  const description = app.seoDescription || `Download ${app.name} APK. Bonus: ${app.bonus || 'N/A'}, Min Withdrawal: ${app.minWithdrawal || 'N/A'}. Discover key features, FAQs and details.`;
+  const title = app.seoTitle || `${app.name} – Download APK & Get Bonus | Yono Games`;
+  const description = app.seoDescription || `Download ${app.name} APK and claim ${app.bonus || 'welcome bonus'}. Min withdrawal: ${app.minWithdrawal || 'N/A'}. Compare features, FAQs and install steps.`;
   const userKeywords = app.keywords ? app.keywords.split(',').map((k: string) => k.trim()).filter(Boolean) : [];
   const keywords = [
     ...userKeywords,

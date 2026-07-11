@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ settings }) => {
           {settings?.headerLogo ? (
             <img
               src={settings.headerLogo}
-              alt={settings.headerTitle || "Logo"}
+              alt={`${settings.headerTitle || 'Yono Games'} – Verified APK Lobbies`}
               className="h-6 w-auto object-contain"
             />
           ) : (

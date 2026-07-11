@@ -113,21 +113,39 @@ export default function PublicShell({ children }: PublicShellProps) {
               </section>
             )}
 
-            <footer>
-              <div className="mt-2 p-2.5" style={{ backgroundColor: 'rgb(17, 24, 39)' }}>
-                <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-                  {internalLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="text-[10px] font-extrabold text-slate-400 hover:text-white no-underline transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+            <footer className="mt-2">
+              <div className="py-6 px-4 text-center space-y-4" style={{ backgroundColor: 'rgb(17, 24, 39)' }}>
+                {/* Row 1: Copyright */}
+                <p className="text-xs font-semibold text-slate-400 tracking-wide">
+                  {cleanSettings?.footerText || defaultSettings.footerText}
+                </p>
+                
+                {/* Row 2 and 3: Links */}
+                <nav className="flex flex-col gap-2">
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+                    {internalLinks.slice(0, 6).map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="text-[10px] font-extrabold text-slate-400 hover:text-white no-underline transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+                    {internalLinks.slice(6).map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="text-[10px] font-extrabold text-slate-400 hover:text-white no-underline transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </nav>
               </div>
-
             </footer>
           </div>
         )}
