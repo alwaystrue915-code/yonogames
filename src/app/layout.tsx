@@ -127,7 +127,7 @@ export default function RootLayout({
       <body>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-MVC6F3T14R" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-MVC6F3T14R'); gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-0X7D361W51'}');`}
+          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-MVC6F3T14R'); gtag('config', 'G-0X7D361W51');`}
         </Script>
         <script
           type="application/ld+json"
