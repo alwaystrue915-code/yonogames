@@ -10,6 +10,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: `${domain}/sitemap.xml`,
+    sitemap: [`${domain}/sitemap.xml`, `https://buysellapp.net/sitemap.xml`],
   };
 }
