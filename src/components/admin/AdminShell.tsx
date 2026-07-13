@@ -41,15 +41,7 @@ export default function AdminShell({ children }: AdminShellProps) {
     }
   }, [authLoading, isAuthenticated, pathname, router]);
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#f2f2f7] flex items-center justify-center">
-        <div className="w-8 h-8 border-[3px] border-[#2C3EFE]/20 border-t-[#2C3EFE] rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
+  if (!authLoading && !isAuthenticated) {
     return <>{children}</>;
   }
 
@@ -119,7 +111,7 @@ export default function AdminShell({ children }: AdminShellProps) {
                 </div>
                 <span className="text-sm font-bold text-gray-900">Yono Games</span>
               </div>
-              <button onClick={() => setMobileOpen(false)} className="p-2 rounded-xl hover:bg-gray-100 cursor-pointer">
+              <button aria-label="Close navigation" onClick={() => setMobileOpen(false)} className="p-2 rounded-xl hover:bg-gray-100 cursor-pointer">
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
@@ -155,7 +147,7 @@ export default function AdminShell({ children }: AdminShellProps) {
       {/* Main Content */}
       <div className="flex-1 lg:ml-[280px] min-h-screen overflow-x-hidden">
         <header className="sticky top-0 z-20 h-14 bg-[#f2f2f7]/80 backdrop-blur-xl border-b border-black/5 flex items-center px-4 lg:hidden">
-          <button onClick={() => setMobileOpen(true)} className="p-2 -ml-2 rounded-xl hover:bg-gray-200/50 cursor-pointer">
+          <button aria-label="Open navigation" onClick={() => setMobileOpen(true)} className="p-2 -ml-2 rounded-xl hover:bg-gray-200/50 cursor-pointer">
             <Menu className="w-5 h-5 text-gray-600" />
           </button>
           <div className="flex items-center gap-2 ml-2">

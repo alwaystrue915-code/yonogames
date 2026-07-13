@@ -8,8 +8,10 @@ export async function GET(request: Request) {
     if (!isAdmin) {
       return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
     }
-    const metrics = await db.analytics.find();
-    const apps = await db.apps.find();
+    const [metrics, apps] = await Promise.all([
+      db.analytics.find(),
+      db.apps.find(),
+    ]);
 
     const results = metrics.map(m => {
       const app = apps.find(a => a.slug === m.appSlug);

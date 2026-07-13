@@ -4,7 +4,7 @@ import { LandingPageContainer } from '../components/LandingPageContainer';
 import PublicShell from '../components/PublicShell';
 import { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await db.settings.get();
@@ -158,7 +158,7 @@ export default async function HomeRoute() {
   };
 
   return (
-    <PublicShell>
+    <PublicShell initialSettings={cleanSettings} initialTopApp={activeApps[0] || null}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }} />
       <LandingPageContainer
         apps={cleanApps}

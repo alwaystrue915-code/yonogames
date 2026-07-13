@@ -92,7 +92,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   useEffect(() => {
     const timer = window.setInterval(() => {
       setSlideIndex((current) => (current + 1) % bannerSlides.length);
-    }, 4000);
+    }, 8000);
     return () => window.clearInterval(timer);
   }, [bannerSlides.length]);
 
@@ -100,15 +100,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="space-y-9 pb-12">
       <div className="space-y-3">
         <section className="relative aspect-[16/7] min-h-[180px] overflow-hidden rounded-lg bg-slate-100 sm:min-h-[260px] lg:min-h-[350px]">
-          {bannerSlides.map((image, index) => (
-            <img
-              key={image}
-              src={image}
-              alt={index === 0 ? 'Popular Yono Games and Android rummy apps' : ''}
-              aria-hidden={index !== slideIndex}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${index === slideIndex ? 'opacity-100' : 'opacity-0'}`}
-            />
-          ))}
+          <img
+            key={bannerSlides[slideIndex]}
+            src={bannerSlides[slideIndex]}
+            alt="Popular Yono Games and Android rummy apps"
+            fetchPriority={slideIndex === 0 ? 'high' : 'auto'}
+            loading="eager"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         </section>
         <div className="flex items-center justify-center gap-2" aria-label="Carousel indicators">
           {bannerSlides.map((_, index) => (

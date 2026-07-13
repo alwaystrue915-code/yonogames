@@ -11,15 +11,7 @@ interface AdminAnalyticsProps {
   totalBlogPosts?: number;
 }
 
-export const AdminAnalytics: React.FC<AdminAnalyticsProps> = ({ analytics, loading, totalApps, totalBlogPosts }) => {
-  if (loading) {
-    return (
-      <div className="py-20 text-center text-xs text-gray-400 font-extrabold">
-        Loading analytics...
-      </div>
-    );
-  }
-
+export const AdminAnalytics: React.FC<AdminAnalyticsProps> = ({ analytics, totalApps, totalBlogPosts }) => {
   return (
     <div className="space-y-6">
       <div>

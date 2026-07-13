@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { CalendarDays, RefreshCw } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -14,6 +14,13 @@ import { DashboardAnalytics } from '../../types';
 type DailyPoint = { key: string; label: string; views: number };
 type StatsPayload = { dailyViews: DailyPoint[] };
 
+function parseGaDate(value: string) {
+  if (/^\d{8}$/.test(value)) {
+    return new Date(Number(value.slice(0, 4)), Number(value.slice(4, 6)) - 1, Number(value.slice(6, 8)));
+  }
+  return new Date(value);
+}
+
 export default function AdminPage() {
   const { isAuthenticated, token, loading: authLoading } = useAdminAuth();
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
@@ -21,7 +28,6 @@ export default function AdminPage() {
   const [totalApps, setTotalApps] = useState<number>(0);
   const [totalBlogPosts, setTotalBlogPosts] = useState<number>(0);
   const [stats, setStats] = useState<StatsPayload | null>(null);
-  const [statsLoading, setStatsLoading] = useState(false);
 
   const fetchData = async () => {
     if (!isAuthenticated || !token) return;
@@ -43,23 +49,13 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!isAuthenticated || !token) return;
-    setStatsLoading(true);
     fetch('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => res.json())
       .then((data) => { if (data && !data.message) setStats({ dailyViews: data.dailyViews || [] }); })
-      .catch(() => {})
-      .finally(() => setStatsLoading(false));
+      .catch(() => {});
   }, [isAuthenticated, token]);
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#f2f2f7] flex items-center justify-center">
-        <div className="w-8 h-8 border-[3px] border-[#34C759]/20 border-t-[#34C759] rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
+  if (!authLoading && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#f2f2f7] flex items-center justify-center w-full">
         <AdminAuth />
@@ -79,7 +75,7 @@ export default function AdminPage() {
         <div className="bg-white/80 rounded-[22px] border border-black/[0.04] p-5 sm:p-6 shadow-[0_16px_45px_rgba(15,23,42,0.08)]">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h3 className="text-base font-bold text-gray-900">Daily Active Users</h3>
+              <h2 className="text-base font-bold text-gray-900">Daily Active Users</h2>
               <p className="text-xs text-gray-400 font-medium mt-0.5">User activity over the selected period</p>
             </div>
             <div className="inline-flex items-center gap-1.5 rounded-lg border border-black/5 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-500">
@@ -87,12 +83,7 @@ export default function AdminPage() {
               Last 30 Days
             </div>
           </div>
-          {statsLoading ? (
-            <div className="h-[360px] flex items-center justify-center">
-              <div className="w-8 h-8 border-[3px] border-[#34C759]/20 border-t-[#34C759] rounded-full animate-spin" />
-            </div>
-          ) : (
-            <div className="h-[360px]">
+          <div className="h-[360px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} barCategoryGap="10%" margin={{ top: 8, right: 4, left: 4, bottom: 4 }}>
                   <defs>
@@ -106,7 +97,7 @@ export default function AdminPage() {
                     dataKey="date"
                     axisLine={false} tickLine={false}
                     tick={{ fontSize: 11, fill: '#94a3b8' }}
-                    tickFormatter={(val) => { const d = new Date(val + 'T00:00:00'); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }}
+                    tickFormatter={(val) => { const d = parseGaDate(String(val)); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }}
                   />
                   <YAxis
                     axisLine={false} tickLine={false}
@@ -116,7 +107,7 @@ export default function AdminPage() {
                   <Tooltip
                     content={({ active, payload, label }: any) => {
                       if (!active || !payload?.length) return null;
-                      const d = new Date(label + 'T00:00:00');
+                      const d = parseGaDate(String(label));
                       return (
                         <div className="bg-white rounded-xl border border-black/5 shadow-lg shadow-black/5 p-3">
                           <p className="text-[11px] font-semibold text-gray-400 mb-1">{d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</p>
@@ -129,8 +120,7 @@ export default function AdminPage() {
                   <Bar dataKey="count" radius={[4, 4, 0, 0]} fill="url(#dailyBarGrad)" />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </AdminShell>

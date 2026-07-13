@@ -19,19 +19,19 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     const savedToken = localStorage.getItem('yono-admin-token');
     if (savedToken) {
-      // Fast check
+      // Restore locally first; protected APIs still verify authorization.
+      setToken(savedToken);
+      setLoading(false);
       fetch('/api/auth/verify', {
         headers: { 'Authorization': `Bearer ${savedToken}` }
       })
       .then(res => {
-        if (res.ok) {
-          setToken(savedToken);
-        } else {
+        if (!res.ok) {
+          setToken(null);
           localStorage.removeItem('yono-admin-token');
         }
       })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
+      .catch(err => console.error(err));
     } else {
       setLoading(false);
     }

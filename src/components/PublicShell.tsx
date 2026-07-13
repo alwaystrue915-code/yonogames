@@ -11,6 +11,8 @@ import { Download } from 'lucide-react';
 
 interface PublicShellProps {
   children: React.ReactNode;
+  initialSettings?: any;
+  initialTopApp?: any;
 }
 
 const defaultSettings: any = {
@@ -32,17 +34,21 @@ const defaultSettings: any = {
   dailyPayouts: '₹50K+'
 };
 
-export default function PublicShell({ children }: PublicShellProps) {
-  const [settings, setSettings] = useState<any>(defaultSettings);
-  const [topApp, setTopApp] = useState<any>(null);
+export default function PublicShell({ children, initialSettings, initialTopApp }: PublicShellProps) {
+  const [settings, setSettings] = useState<any>(initialSettings || defaultSettings);
+  const [topApp, setTopApp] = useState<any>(initialTopApp || null);
 
   useEffect(() => {
-    fetch('/api/settings').then(r => r.json()).then(d => setSettings(d)).catch(() => {});
-    fetch('/api/apps').then(r => r.json()).then((apps: any[]) => {
-      const active = (apps || []).filter((a: any) => a.status === 'active');
-      setTopApp(active[0] || null);
-    }).catch(() => {});
-  }, []);
+    if (!initialSettings) {
+      fetch('/api/settings').then(r => r.json()).then(d => setSettings(d)).catch(() => {});
+    }
+    if (!initialTopApp) {
+      fetch('/api/apps').then(r => r.json()).then((apps: any[]) => {
+        const active = (apps || []).filter((a: any) => a.status === 'active');
+        setTopApp(active[0] || null);
+      }).catch(() => {});
+    }
+  }, [initialSettings, initialTopApp]);
 
   const cleanSettings = settings;
   const isDarkBg = cleanSettings?.backgroundType === 'dark-lust' || cleanSettings?.backgroundType === 'card-suit-green';
