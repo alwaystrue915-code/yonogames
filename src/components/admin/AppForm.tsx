@@ -253,6 +253,22 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
               </span>
             ))}
           </div>
+          <details className="group mb-2">
+            <summary className="text-[10px] font-bold text-[#2C3EFE] cursor-pointer list-none flex items-center gap-1 hover:text-[#2230d6] transition-colors">
+              <span className="group-open:rotate-45 transition-transform text-xs">+</span>
+              JSON Tags
+            </summary>
+            <textarea className="w-full mt-2 p-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2C3EFE]/20 resize-y"
+              rows={3} placeholder='["tag1", "tag2"]'
+              defaultValue={form.tags && form.tags.length > 0 ? JSON.stringify(form.tags, null, 2) : ''}
+              onBlur={e => {
+                const v = e.target.value.trim();
+                if (!v) return;
+                try { const parsed = JSON.parse(v); if (Array.isArray(parsed)) { setForm({ ...form, tags: parsed }); } }
+                catch {}
+              }} />
+            <p className="text-[9px] text-gray-400 mt-1">Paste JSON array of strings. Invalid JSON ignored.</p>
+          </details>
           <div className="flex gap-2">
             <input type="text" placeholder="Add tag..." value={tagsInput} onChange={e => setTagsInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (tagsInput.trim() && !form.tags.includes(tagsInput.trim())) { setForm({ ...form, tags: [...form.tags, tagsInput.trim()] }); setTagsInput(''); } } }}
@@ -264,6 +280,22 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
 
         <div className="space-y-2">
           <label className="text-[11px] font-bold text-gray-400 tracking-wider block">Features</label>
+          <details className="group mb-2">
+            <summary className="text-[10px] font-bold text-[#2C3EFE] cursor-pointer list-none flex items-center gap-1 hover:text-[#2230d6] transition-colors">
+              <span className="group-open:rotate-45 transition-transform text-xs">+</span>
+              JSON Features
+            </summary>
+            <textarea className="w-full mt-2 p-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2C3EFE]/20 resize-y"
+              rows={3} placeholder='["feature1", "feature2"]'
+              defaultValue={form.features && form.features.length > 0 ? JSON.stringify(form.features, null, 2) : ''}
+              onBlur={e => {
+                const v = e.target.value.trim();
+                if (!v) return;
+                try { const parsed = JSON.parse(v); if (Array.isArray(parsed)) { setForm({ ...form, features: parsed }); } }
+                catch {}
+              }} />
+            <p className="text-[9px] text-gray-400 mt-1">Paste JSON array of strings. Invalid JSON ignored.</p>
+          </details>
           <div className="flex gap-2">
             <input type="text" placeholder="Add feature..." value={newFeature} onChange={e => setNewFeature(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); if (newFeature.trim()) { setForm({ ...form, features: [...form.features, newFeature.trim()] }); setNewFeature(''); } } }}
