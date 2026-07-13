@@ -508,6 +508,20 @@ export const AppsManager: React.FC<AppsManagerProps> = ({
                   </div>
                 ))}
               </div>
+
+              <div className="mt-3 border-t border-slate-200 pt-3">
+                <label className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider block mb-1.5">FAQs (JSON format)</label>
+                <textarea className="w-full p-2.5 rounded-lg text-xs outline-none bg-white border border-slate-300 text-slate-800 font-mono resize-y"
+                  rows={5} placeholder='[{&#10;  "question": "Example?",&#10;  "answer": "Example answer."&#10;}]'
+                  defaultValue={editingApp.faqs && editingApp.faqs.length > 0 ? JSON.stringify(editingApp.faqs, null, 2) : ''}
+                  onBlur={e => {
+                    const v = e.target.value.trim();
+                    if (!v) return;
+                    try { const parsed = JSON.parse(v); if (Array.isArray(parsed)) { setEditingApp(prev => ({ ...prev, faqs: parsed })); } }
+                    catch {}
+                  }} />
+                <p className="text-[9px] text-slate-400 mt-1">Paste JSON array and click outside to apply. Invalid JSON ignored.</p>
+              </div>
             </div>
 
             {/* SEO Metadata Setup */}
