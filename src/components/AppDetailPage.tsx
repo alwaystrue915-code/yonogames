@@ -282,7 +282,7 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
       <section className="overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600"><ShieldCheck size={18} /></div>
         <h3 className="text-left text-sm font-extrabold text-slate-900">
-          Gameplay Features
+          Game Features
         </h3>
         <ul className="mt-3 flex flex-col gap-2.5 text-left">
           {app.features.map((feat, idx) => (
