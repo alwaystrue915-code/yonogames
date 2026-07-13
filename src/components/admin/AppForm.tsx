@@ -283,7 +283,23 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
 
         <div className="space-y-2">
           <label className="text-[11px] font-bold text-gray-400 tracking-wider block">FAQs</label>
-          <div className="flex gap-2">
+          <details className="group">
+            <summary className="text-xs font-bold text-[#2C3EFE] cursor-pointer list-none flex items-center gap-1 hover:text-[#2230d6] transition-colors">
+              <span className="group-open:rotate-45 transition-transform">+</span>
+              JSON Editor
+            </summary>
+            <textarea className="w-full mt-2 p-3 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2C3EFE]/20 resize-y"
+              rows={6} placeholder='[{&#10;  "question": "Example?",&#10;  "answer": "Example answer."&#10;}]'
+              defaultValue={form.faqs && form.faqs.length > 0 ? JSON.stringify(form.faqs, null, 2) : ''}
+              onBlur={e => {
+                const v = e.target.value.trim();
+                if (!v) return;
+                try { const parsed = JSON.parse(v); if (Array.isArray(parsed)) { setForm({ ...form, faqs: parsed }); } }
+                catch {}
+              }} />
+            <p className="text-[9px] text-gray-400 mt-1">Paste JSON array and click outside. Invalid JSON ignored.</p>
+          </details>
+          <div className="flex gap-2 mt-2">
             <input type="text" placeholder="Question" value={faqQ} onChange={e => setFaqQ(e.target.value)}
               className="flex-1 px-4 py-2.5 bg-gray-50/80 border border-black/[0.06] rounded-2xl text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#34C759]/20" />
             <input type="text" placeholder="Answer" value={faqA} onChange={e => setFaqA(e.target.value)}
@@ -291,7 +307,7 @@ export const AppForm: React.FC<AppFormProps> = ({ initialData }) => {
             <button type="button" onClick={() => { if (faqQ.trim() && faqA.trim()) { setForm({ ...form, faqs: [...form.faqs, { question: faqQ.trim(), answer: faqA.trim() }] }); setFaqQ(''); setFaqA(''); } }}
               className="px-4 py-2.5 bg-gray-100 rounded-2xl text-xs font-bold text-gray-600 hover:bg-gray-200 cursor-pointer">Add</button>
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 max-h-[200px] overflow-y-auto">
             {form.faqs.map((f, i) => (
               <div key={i} className="flex items-center gap-2 p-2 rounded-xl bg-gray-50/80 border border-black/[0.04]">
                 <div className="flex-1 min-w-0">
