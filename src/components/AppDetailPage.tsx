@@ -251,23 +251,32 @@ export const AppDetailPage: React.FC<AppDetailPageProps> = ({
       </section>
 
       {/* Admin-entered article content */}
-      {app.description && app.description.trim() !== '' && (
-        <section className="rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm sm:p-6">
-          <div className="mb-5 flex items-start gap-3 border-b border-slate-100 pb-4">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[#2C3EFE]">
-              <Smartphone size={18} />
+      {app.description && app.description.trim() !== '' && (() => {
+        const h1Match = app.description.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+        const h1Text = h1Match ? h1Match[1].replace(/<[^>]*>/g, '').trim() : '';
+        const content = h1Match ? app.description.replace(h1Match[0], '') : app.description;
+        return (
+          <section className="rounded-lg border border-slate-200 bg-white p-4 text-left shadow-sm sm:p-6">
+            <div className="mb-5 flex items-start gap-3 border-b border-slate-100 pb-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[#2C3EFE]">
+                <Smartphone size={18} />
+              </div>
+              <div>
+                <span className="text-[9px] font-black uppercase text-[#2C3EFE]">Complete app review</span>
+                {h1Text ? (
+                  <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">{h1Text}</h2>
+                ) : (
+                  <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">About {app.name} APK</h2>
+                )}
+              </div>
             </div>
-            <div>
-              <span className="text-[9px] font-black uppercase text-[#2C3EFE]">Complete app review</span>
-              <h2 className="text-base font-extrabold text-slate-900 sm:text-lg">About {app.name} APK</h2>
-            </div>
-          </div>
-          <div 
-            className="blog-content text-sm text-slate-600 leading-relaxed space-y-4 [&_h2]:text-base [&_h2]:font-extrabold [&_h2]:text-slate-800 [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-base [&_h3]:font-extrabold [&_h3]:text-slate-800 [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:text-sm [&_p]:text-slate-600 [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:space-y-1.5 [&_ul]:mb-4 [&_li]:text-sm [&_li]:text-slate-600 [&_li]:font-medium [&_li]:list-disc [&_li]:ml-5 [&_ol]:space-y-1.5 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:ml-5 [&_strong]:text-slate-800 [&_strong]:font-extrabold [&_a]:text-[#2C3EFE] [&_a]:font-bold [&_a]:underline [&_img]:rounded-xl [&_img]:border [&_img]:border-slate-200 [&_img]:my-4 [&_img]:max-w-full [&_table]:w-full [&_table]:border-collapse [&_table]:mb-4 [&_table]:text-sm [&_th]:border [&_th]:border-slate-300 [&_th]:bg-slate-100 [&_th]:px-3 [&_th]:py-2 [&_th]:font-extrabold [&_th]:text-slate-700 [&_td]:border [&_td]:border-slate-200 [&_td]:px-3 [&_td]:py-2 [&_td]:text-slate-600 [&_tr]:even:bg-slate-50 [&_blockquote]:border-l-4 [&_blockquote]:border-[#2C3EFE] [&_blockquote]:pl-4 [&_blockquote]:py-1 [&_blockquote]:text-slate-500 [&_blockquote]:italic [&_blockquote]:my-4 [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre]:text-xs [&_pre]:my-4 [&_code]:bg-slate-100 [&_code]:text-slate-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:font-mono [&_pre_code]:bg-transparent [&_pre_code]:text-inherit [&_pre_code]:p-0 [&_hr]:border-slate-200 [&_hr]:my-6 break-words whitespace-normal" 
-            dangerouslySetInnerHTML={{ __html: app.description }} 
-          />
-        </section>
-      )}
+            <div 
+              className="blog-content text-sm text-slate-600 leading-relaxed space-y-4 [&_h2]:text-base [&_h2]:font-extrabold [&_h2]:text-slate-800 [&_h2]:mt-6 [&_h2]:mb-3 [&_h3]:text-base [&_h3]:font-extrabold [&_h3]:text-slate-800 [&_h3]:mt-6 [&_h3]:mb-3 [&_p]:text-sm [&_p]:text-slate-600 [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:space-y-1.5 [&_ul]:mb-4 [&_li]:text-sm [&_li]:text-slate-600 [&_li]:font-medium [&_li]:list-disc [&_li]:ml-5 [&_ol]:space-y-1.5 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:ml-5 [&_strong]:text-slate-800 [&_strong]:font-extrabold [&_a]:text-[#2C3EFE] [&_a]:font-bold [&_a]:underline [&_img]:rounded-xl [&_img]:border [&_img]:border-slate-200 [&_img]:my-4 [&_img]:max-w-full [&_table]:w-full [&_table]:border-collapse [&_table]:mb-4 [&_table]:text-sm [&_th]:border [&_th]:border-slate-300 [&_th]:bg-slate-100 [&_th]:px-3 [&_th]:py-2 [&_th]:font-extrabold [&_th]:text-slate-700 [&_td]:border [&_td]:border-slate-200 [&_td]:px-3 [&_td]:py-2 [&_td]:text-slate-600 [&_tr]:even:bg-slate-50 [&_blockquote]:border-l-4 [&_blockquote]:border-[#2C3EFE] [&_blockquote]:pl-4 [&_blockquote]:py-1 [&_blockquote]:text-slate-500 [&_blockquote]:italic [&_blockquote]:my-4 [&_pre]:bg-slate-900 [&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:rounded-xl [&_pre]:overflow-x-auto [&_pre]:text-xs [&_pre]:my-4 [&_code]:bg-slate-100 [&_code]:text-slate-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:font-mono [&_pre_code]:bg-transparent [&_pre_code]:text-inherit [&_pre_code]:p-0 [&_hr]:border-slate-200 [&_hr]:my-6 break-words whitespace-normal" 
+              dangerouslySetInnerHTML={{ __html: content }} 
+            />
+          </section>
+        );
+      })()}
 
       {/* Highlights checklist */}
       <section className="overflow-hidden rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
