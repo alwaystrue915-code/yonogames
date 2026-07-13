@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { db } from '../../../lib/db';
 import { AppDetailPage } from '../../../components/AppDetailPage';
@@ -11,12 +11,14 @@ type Props = {
   params: Promise<{ slug: string }> | { slug: string };
 };
 
+const getApp = cache((slug: string) => db.apps.findOne({ slug }));
+const getSettings = cache(() => db.settings.get());
+
 // 1. Dynamic Server-Side Metadata Generation
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  const app = await db.apps.findOne({ slug });
-  const settings = await db.settings.get();
+  const [app, settings] = await Promise.all([getApp(slug), getSettings()]);
 
   if (!app) {
     return {
@@ -99,9 +101,9 @@ export default async function AppRoute({ params }: Props) {
   const slug = resolvedParams.slug;
 
   const [app, apps, settings] = await Promise.all([
-    db.apps.findOne({ slug }),
+    getApp(slug),
     db.apps.find(),
-    db.settings.get()
+    getSettings()
   ]);
 
   if (!app) {
@@ -109,11 +111,10 @@ export default async function AppRoute({ params }: Props) {
   }
 
   // Record page view count in backend analytics database
-  try {
-    await db.analytics.recordView(slug);
-  } catch (err) {
-    console.error('Failed to log page view view analytics:', err);
-  }
+  // Analytics must never delay the page response.
+  void db.analytics.recordView(slug).catch((err) => {
+    console.error('Failed to log page view analytics:', err);
+  });
 
   // Clean objects for client components
   const cleanApp = JSON.parse(JSON.stringify(app));
@@ -216,7 +217,7 @@ export default async function AppRoute({ params }: Props) {
   };
 
   return (
-    <PublicShell>
+    <PublicShell initialSettings={cleanSettings} initialTopApp={cleanApps[0] || null}>
       {/* Structured data LD-JSON element */}
       <script
         type="application/ld+json"
