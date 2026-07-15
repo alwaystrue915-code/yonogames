@@ -5,10 +5,11 @@ import { db } from '@/lib/db';
 import { Calendar, Clock, Eye, Tag, User } from 'lucide-react';
 import PublicShell from '../../../components/PublicShell';
 import BlogContent from '../../../components/BlogContent';
+import { jsonLd, sanitizeArticle, SITE_URL } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
-const siteUrl = 'https://yonogamelive.app';
+const siteUrl = SITE_URL;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -57,7 +58,7 @@ export default async function BlogPostPage({ params }: Props) {
   const similarPosts = allPosts
     .filter(p => p.slug !== post.slug && (p.category === post.category || (post.tags || []).some(t => (p.tags || []).includes(t))))
     .slice(0, 4);
-  const domain = settings?.siteDomain || siteUrl;
+  const domain = SITE_URL;
 
   const articleSchema = {
     '@context': 'https://schema.org',
@@ -87,8 +88,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <PublicShell>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbSchema) }} />
       <style>{`
         details[open] summary + div {
           max-height: 600px;
@@ -169,7 +170,7 @@ export default async function BlogPostPage({ params }: Props) {
             } catch { return null; }
           })()}
 
-          <BlogContent htmlContent={post.htmlContent} content={post.content} />
+          <BlogContent htmlContent={sanitizeArticle(post.htmlContent || '')} content={post.content} />
 
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">

@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/security';
 import React from 'react';
 import { db } from '../lib/db';
 import { LandingPageContainer } from '../components/LandingPageContainer';
@@ -8,7 +9,7 @@ export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await db.settings.get();
-  const domain = settings?.siteDomain || 'https://yonogamelive.app';
+  const domain = SITE_URL;
   const title = settings?.siteTitle || 'Yono Games - Yono Game APK Download, Bonus & App Comparison';
   const description = settings?.siteDescription || 'Find Yono game and Yono Games APK listings in one India-focused directory. Compare bonuses, ratings, minimum withdrawals, app features, safety notes and download guides.';
   const image = settings?.banner1
@@ -82,7 +83,7 @@ export default async function HomeRoute() {
   const cleanCategories = JSON.parse(JSON.stringify(categories));
   const cleanCollections = JSON.parse(JSON.stringify(collections));
   const cleanSettings = JSON.parse(JSON.stringify(settings));
-  const domain = cleanSettings?.siteDomain || 'https://yonogamelive.app';
+  const domain = SITE_URL;
   const image = cleanSettings?.banner1
     ? (cleanSettings.banner1.startsWith('http') ? cleanSettings.banner1 : `${domain}${cleanSettings.banner1}`)
     : `${domain}/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg`;

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
+import { appInputSchema } from '@/lib/security';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -17,7 +18,7 @@ export async function GET(request: Request) {
     const list = await db.apps.find(filter);
     return NextResponse.json(list);
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }
 
@@ -31,7 +32,7 @@ export async function DELETE(request: Request) {
     const deletedCount = await db.apps.deleteAll();
     return NextResponse.json({ message: `Deleted ${deletedCount} apps.`, deletedCount });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }
 
@@ -42,13 +43,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
     }
 
-    const appData = await request.json();
-    if (!appData.name || !appData.slug) {
-      return NextResponse.json({ message: 'Name and unique slug are required.' }, { status: 400 });
+    const parsed = appInputSchema.safeParse(await request.json());
+    if (!parsed.success) {
+      return NextResponse.json({ message: 'Invalid app data.', issues: parsed.error.flatten().fieldErrors }, { status: 400 });
     }
-    const created = await db.apps.create(appData);
+    const created = await db.apps.create(parsed.data);
     return NextResponse.json(created, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

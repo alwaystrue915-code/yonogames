@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import {
   Eye, MousePointerClick, Users, Timer, Radio, TrendingUp, Share2, Link2, Search,
-  Earth, Chrome, Globe2, Instagram, Facebook, ChevronDown, Filter,
+  Earth, Globe2, ChevronDown, Filter,
 } from 'lucide-react';
 import { useAdminAuth } from '@/context/AdminAuthContext';
 import AdminShell from '@/components/admin/AdminShell';
@@ -43,9 +43,9 @@ function formatNumber(value: number) {
 
 function itemIcon(name: string, fallback = Globe2) {
   const lower = name.toLowerCase();
-  if (lower.includes('instagram')) return Instagram;
-  if (lower.includes('facebook')) return Facebook;
-  if (lower.includes('chrome') || lower.includes('browser')) return Chrome;
+  if (lower.includes('instagram')) return Share2;
+  if (lower.includes('facebook')) return Share2;
+  if (lower.includes('chrome') || lower.includes('browser')) return Globe2;
   if (lower.includes('organic')) return Search;
   if (lower.includes('referral')) return Link2;
   if (lower.includes('social')) return Share2;
@@ -155,7 +155,7 @@ export default function AdminAnalyticsPage() {
   useEffect(() => {
     if (!token) return;
     let mounted = true;
-    const evtSource = new EventSource(`/api/admin/ga-live?token=${token}`);
+    const evtSource = new EventSource('/api/admin/ga-live');
     evtSource.onmessage = (e) => {
       try {
         const data: RealtimeData = JSON.parse(e.data);
@@ -329,7 +329,7 @@ export default function AdminAnalyticsPage() {
           <RingChart devices={s.devices} total={deviceTotal} />
           {[
             { title: 'Countries', data: s.countries, color: '#34c759', icon: Earth, fallbackIcon: Globe2, kind: 'country' as const },
-            { title: 'Browsers', data: s.browsers, color: '#0a84ff', icon: Chrome, fallbackIcon: Chrome, kind: 'browser' as const },
+            { title: 'Browsers', data: s.browsers, color: '#0a84ff', icon: Globe2, fallbackIcon: Globe2, kind: 'browser' as const },
           ].map((section) => {
             const maxV = Math.max(1, ...section.data.map((i) => i.value));
             const HeaderIcon = section.icon;

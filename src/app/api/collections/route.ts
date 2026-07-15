@@ -6,6 +6,6 @@ export async function GET() {
     const list = await db.collections.find();
     return NextResponse.json(list);
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

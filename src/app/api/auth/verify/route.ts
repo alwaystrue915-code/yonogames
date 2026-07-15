@@ -9,6 +9,6 @@ export async function GET(request: Request) {
     }
     return NextResponse.json({ valid: true });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message || 'Verification failed.' }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

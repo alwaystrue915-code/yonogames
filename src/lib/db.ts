@@ -90,6 +90,11 @@ export interface AnalyticsRecord {
   history: { date: string; views: number; clicks: number }[];
 }
 
+export interface AdminSession {
+  tokenHash: string;
+  expiresAt: Date;
+}
+
 export interface SiteSettings {
   siteName: string;
   siteTitle: string;
@@ -181,11 +186,16 @@ const AnalyticsSchema = new mongoose.Schema<AnalyticsRecord>({
   history: [{ date: String, views: Number, clicks: Number }]
 });
 
+const AdminSessionSchema = new mongoose.Schema<AdminSession>({
+  tokenHash: { type: String, required: true, unique: true, index: true },
+  expiresAt: { type: Date, required: true, index: { expires: 0 } },
+});
+
 const SettingsSchema = new mongoose.Schema<SiteSettings>({
   siteName: { type: String, default: 'YonoV2' },
   siteTitle: { type: String, default: 'Yono Games – Premium App Discovery & Play Platform' },
   siteDescription: { type: String, default: 'Discover, compare and download premium rummy and skill apps.' },
-  adminPasscode: { type: String, default: 'admin123' },
+  adminPasscode: { type: String, default: '' },
   footerText: { type: String, default: '© 2026 Yono Games. Play Responsibly. 18+ Only.' },
   featuredAppsLimit: { type: Number, default: 10 },
   footerAdImage: { type: String, default: '' },
@@ -193,7 +203,7 @@ const SettingsSchema = new mongoose.Schema<SiteSettings>({
   footerAdActive: { type: Boolean, default: false },
   backgroundType: { type: String, default: 'white' },
   cardStyle: { type: String, default: 'default' },
-  adminEmail: { type: String, default: 'botgo@app' },
+  adminEmail: { type: String, default: '' },
   adminPasswordHash: { type: String },
   banner1: { type: String, default: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg' },
   banner2: { type: String, default: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner2.jpg' },
@@ -247,6 +257,7 @@ export const TagModel = mongoose.models.Tag || mongoose.model<Tag>('Tag', TagSch
 export const CollectionModel = mongoose.models.Collection || mongoose.model<Collection>('Collection', CollectionSchema);
 export const AnalyticsModel = mongoose.models.Analytics || mongoose.model<AnalyticsRecord>('Analytics', AnalyticsSchema);
 export const SettingsModel = mongoose.models.Settings || mongoose.model<SiteSettings>('Settings', SettingsSchema);
+export const AdminSessionModel = mongoose.models.AdminSession || mongoose.model<AdminSession>('AdminSession', AdminSessionSchema);
 export const BlogPostModel = mongoose.models.BlogPost || mongoose.model<BlogPost>('BlogPost', BlogPostSchema);
 
 // -------------------------------------------------------------
@@ -254,6 +265,7 @@ export const BlogPostModel = mongoose.models.BlogPost || mongoose.model<BlogPost
 // -------------------------------------------------------------
 let useMongo = false;
 let isConnected = false;
+const localAdminSessions = new Map<string, number>();
 
 export async function connectDb() {
   if (isConnected) return;
@@ -296,7 +308,7 @@ const defaultSettings: SiteSettings = {
   siteName: 'YonoV2',
   siteTitle: 'Yono Games – Premium App Discovery & Play Platform',
   siteDescription: 'Discover, compare and download premium rummy and skill apps.',
-  adminPasscode: 'admin123',
+  adminPasscode: '',
   footerText: '© 2026 Yono Games. Play Responsibly. 18+ Only.',
   featuredAppsLimit: 10,
   footerAdImage: '',
@@ -304,7 +316,7 @@ const defaultSettings: SiteSettings = {
   footerAdActive: false,
   backgroundType: 'white',
   cardStyle: 'default',
-  adminEmail: 'botgo@app',
+  adminEmail: '',
   adminPasswordHash: '',
   banner1: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner1.jpg',
   banner2: '/scrapperv2/allrummybonus_com/wp-content/uploads/2025/12/all-rummy-bonus-banner2.jpg',
@@ -808,6 +820,34 @@ export const db = {
     }
   },
 
+  adminSessions: {
+    create: async (tokenHash: string, expiresAt: Date): Promise<void> => {
+      await connectDb();
+      if (useMongo) {
+        await AdminSessionModel.create({ tokenHash, expiresAt });
+      } else {
+        localAdminSessions.set(tokenHash, expiresAt.getTime());
+      }
+    },
+    verify: async (tokenHash: string): Promise<boolean> => {
+      await connectDb();
+      if (useMongo) {
+        return Boolean(await AdminSessionModel.exists({ tokenHash, expiresAt: { $gt: new Date() } }));
+      }
+      const expiresAt = localAdminSessions.get(tokenHash);
+      if (!expiresAt || expiresAt <= Date.now()) {
+        localAdminSessions.delete(tokenHash);
+        return false;
+      }
+      return true;
+    },
+    delete: async (tokenHash: string): Promise<void> => {
+      await connectDb();
+      if (useMongo) await AdminSessionModel.deleteOne({ tokenHash });
+      else localAdminSessions.delete(tokenHash);
+    },
+  },
+
   // Blog API
   blog: blogDb,
 
@@ -826,30 +866,6 @@ export const db = {
       } else {
         const dbData = readJsonDb();
         conf = { ...defaultSettings, ...Object.fromEntries(Object.entries(dbData.settings || {}).filter(([_, v]) => v !== undefined && v !== null)) };
-      }
-
-      // Check if adminPasswordHash is missing or needs initialization
-      if (!conf.adminPasswordHash || conf.adminEmail !== 'botgo@app') {
-        try {
-          const bcryptjs = require('bcryptjs');
-          const hash = bcryptjs.hashSync('yoonogames#980', 10);
-          conf.adminEmail = 'botgo@app';
-          conf.adminPasswordHash = hash;
-
-          if (useMongo) {
-            conf = await SettingsModel.findOneAndUpdate(
-              {},
-              { $set: { adminEmail: conf.adminEmail, adminPasswordHash: conf.adminPasswordHash } },
-              { new: true }
-            ).lean();
-          } else {
-            const dbData = readJsonDb();
-            dbData.settings = conf;
-            writeJsonDb(dbData);
-          }
-        } catch (e) {
-          console.error('Failed to initialize admin password:', e);
-        }
       }
 
       return conf as any;

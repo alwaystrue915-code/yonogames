@@ -1,3 +1,4 @@
+import { SITE_URL } from '@/lib/security';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { db } from '@/lib/db';
@@ -68,12 +69,13 @@ const brandText = (value?: string) => (value || 'Yono Games').replace(/Yono Hub/
 
 export const dynamic = 'force-dynamic';
 
-export default async function BlogPage({ searchParams }: { searchParams?: { q?: string } }) {
+export default async function BlogPage({ searchParams }: { searchParams?: Promise<{ q?: string }> }) {
+  const resolvedSearchParams = await searchParams;
   const [posts, settings] = await Promise.all([
     db.blog.find({ status: 'published' }),
     db.settings.get(),
   ]);
-  const domain = settings?.siteDomain || siteUrl;
+  const domain = SITE_URL;
   const publishedPosts = [...posts]
     .filter((post) => post.status === 'published')
     .sort((a, b) => {
@@ -81,7 +83,7 @@ export default async function BlogPage({ searchParams }: { searchParams?: { q?: 
       const bTime = new Date(b.updatedAt || b.date || b.createdAt || 0).getTime();
       return bTime - aTime;
     });
-  const searchQuery = searchParams?.q?.toLowerCase().trim();
+  const searchQuery = resolvedSearchParams?.q?.toLowerCase().trim();
   const filteredPosts = searchQuery
     ? publishedPosts.filter((post) =>
         post.title.toLowerCase().includes(searchQuery) ||

@@ -4,11 +4,12 @@ import { db } from '../../../lib/db';
 import { AppDetailPage } from '../../../components/AppDetailPage';
 import { Metadata } from 'next';
 import PublicShell from '../../../components/PublicShell';
+import { jsonLd as serializeJsonLd, sanitizeArticle, SITE_URL } from '@/lib/security';
 
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 const getApp = cache((slug: string) => db.apps.findOne({ slug }));
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const domain = settings?.siteDomain || 'https://yonogamelive.app';
+  const domain = SITE_URL;
   const pageUrl = `${domain}/app/${app.slug}`;
   const imageUrl = app.logo.startsWith('http') ? app.logo : `${domain}${app.logo}`;
 
@@ -118,10 +119,11 @@ export default async function AppRoute({ params }: Props) {
 
   // Clean objects for client components
   const cleanApp = JSON.parse(JSON.stringify(app));
+  cleanApp.description = sanitizeArticle(cleanApp.description || '');
   const cleanApps = JSON.parse(JSON.stringify(apps));
   const cleanSettings = JSON.parse(JSON.stringify(settings));
 
-  const domain = cleanSettings?.siteDomain || 'https://yonogamelive.app';
+  const domain = SITE_URL;
   const imageUrl = cleanApp.logo.startsWith('http') ? cleanApp.logo : `${domain}${cleanApp.logo}`;
   const seoDesc = cleanApp.seoDescription || `Download ${cleanApp.name} APK. Bonus: ${cleanApp.bonus || 'N/A'}.`;
   const pageUrl = `${domain}/app/${cleanApp.slug}`;
@@ -221,7 +223,7 @@ export default async function AppRoute({ params }: Props) {
       {/* Structured data LD-JSON element */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       
       <AppDetailPage

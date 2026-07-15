@@ -7,7 +7,7 @@ export async function GET() {
     const list = await db.tags.find();
     return NextResponse.json(list);
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }
 
@@ -22,6 +22,6 @@ export async function POST(request: Request) {
     const created = await db.tags.create(tagData);
     return NextResponse.json(created, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

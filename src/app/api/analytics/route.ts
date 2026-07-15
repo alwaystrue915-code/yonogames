@@ -41,6 +41,6 @@ export async function GET(request: Request) {
       topAppsByClicks
     });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

@@ -1,15 +1,14 @@
 import { MetadataRoute } from 'next';
-import { db } from '../lib/db';
+import { SITE_URL } from '@/lib/security';
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  const settings = await db.settings.get();
-  const domain = settings?.siteDomain || 'https://yonogamelive.app';
-
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: ['/admin/', '/api/', '/uploads/', '/scrapperv2/'],
     },
-    sitemap: `${domain}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

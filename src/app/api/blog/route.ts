@@ -6,6 +6,6 @@ export async function GET() {
     const posts = await db.blog.find({ status: 'published', featured: undefined });
     return NextResponse.json(posts);
   } catch (e: any) {
-    return NextResponse.json({ message: e.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

@@ -2,14 +2,14 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyAdmin } from '@/lib/auth';
 
-export async function PUT(request: Request, { params }: { params: { slug: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const isAdmin = await verifyAdmin(request);
     if (!isAdmin) {
       return NextResponse.json({ message: 'Invalid admin credentials.' }, { status: 403 });
     }
 
-    const { slug } = params;
+    const { slug } = await params;
     const collData = await request.json();
     const updated = await db.collections.update(slug, collData);
     if (!updated) {
@@ -17,6 +17,6 @@ export async function PUT(request: Request, { params }: { params: { slug: string
     }
     return NextResponse.json(updated);
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 500 });
+    return NextResponse.json({ message: 'Request failed.' }, { status: 500 });
   }
 }

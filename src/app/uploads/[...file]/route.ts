@@ -1,42 +1,41 @@
-import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+const CONTENT_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+};
+
 export async function GET(
-  request: Request,
-  { params }: { params: { file: string[] } }
+  _request: Request,
+  { params }: { params: Promise<{ file: string[] }> }
 ) {
   try {
-    const fileSegments = params.file;
-    const uploadsDir = path.join(process.cwd(), 'uploads');
-    const filePath = path.join(uploadsDir, ...fileSegments);
+    const root = path.resolve(path.join(process.cwd(), 'uploads'));
+    const candidate = path.resolve(root, ...(await params).file);
+    const relative = path.relative(root, candidate);
 
-    // Prevent directory traversal attacks
-    if (!filePath.startsWith(uploadsDir)) {
-      return new Response('Access Denied', { status: 403 });
+    if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) {
+      return new Response('Not found', { status: 404 });
     }
 
-    if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-      return new Response('File Not Found', { status: 404 });
+    const extension = path.extname(candidate).toLowerCase();
+    const contentType = CONTENT_TYPES[extension];
+    if (!contentType || !fs.existsSync(candidate) || fs.statSync(candidate).isDirectory()) {
+      return new Response('Not found', { status: 404 });
     }
 
-    const fileBuffer = fs.readFileSync(filePath);
-    const ext = path.extname(filePath).toLowerCase();
-    
-    let contentType = 'application/octet-stream';
-    if (ext === '.jpg' || ext === '.jpeg') contentType = 'image/jpeg';
-    else if (ext === '.png') contentType = 'image/png';
-    else if (ext === '.gif') contentType = 'image/gif';
-    else if (ext === '.webp') contentType = 'image/webp';
-    else if (ext === '.svg') contentType = 'image/svg+xml';
-
-    return new Response(fileBuffer, {
+    return new Response(fs.readFileSync(candidate), {
       headers: {
         'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=86400, must-revalidate',
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'public, max-age=86400, immutable',
       },
     });
-  } catch (error: any) {
-    return new Response(`Error serving upload: ${error.message}`, { status: 500 });
+  } catch {
+    return new Response('Not found', { status: 404 });
   }
 }

@@ -1,8 +1,9 @@
+import { SITE_URL } from '@/lib/security';
 import { db } from '@/lib/db';
 
 export async function GET() {
   const settings = await db.settings.get();
-  const domain = settings?.siteDomain || 'https://yonogamelive.app';
+  const domain = SITE_URL;
   const siteName = settings?.siteName || 'Yono Games';
   const siteDesc = settings?.siteDescription || 'Yono Game and Yono Games APK discovery, comparison and download guide directory for India-focused Android app research.';
 

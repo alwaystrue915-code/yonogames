@@ -3,11 +3,7 @@ import { getGa4Realtime } from '@/lib/ga4';
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const token = searchParams.get('token');
-    if (!token) return new Response('Unauthorized', { status: 401 });
-    const authRequest = new Request(request.url, { headers: { Authorization: `Bearer ${token}` } });
-    if (!(await verifyAdmin(authRequest))) {
+    if (!(await verifyAdmin(request))) {
       return new Response('Unauthorized', { status: 401 });
     }
 
